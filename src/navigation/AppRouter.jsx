@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Text, BottomNavigation } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,29 +14,32 @@ const QueueScreen = () => <Text>Queue</Text>;
 const SurveyScreen = () => <Text>Survey</Text>;
 
 const AppRouter = () => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const [index, setIndex] = useState(0);
-    const [routes] = useState([
-        {
-            key: "survey",
-            title: t("navigation.appRouter.screenTitles.surveys"),
-            focusedIcon: "clipboard-list",
-            unfocusedIcon: "clipboard-list-outline"
-        },
-        {
-            key: "queue",
-            title: t("navigation.appRouter.screenTitles.queue"),
-            focusedIcon: "timer",
-            unfocusedIcon: "timer-outline"
-        },
-        {
-            key: "settings",
-            title: t("navigation.appRouter.screenTitles.settings"),
-            focusedIcon: "cog",
-            unfocusedIcon: "cog-outline"
-        }
-    ]);
+    const routes = useMemo(
+        () => [
+            {
+                key: "survey",
+                title: t("navigation.appRouter.screenTitles.surveys"),
+                focusedIcon: "clipboard-list",
+                unfocusedIcon: "clipboard-list-outline"
+            },
+            {
+                key: "queue",
+                title: t("navigation.appRouter.screenTitles.queue"),
+                focusedIcon: "timer",
+                unfocusedIcon: "timer-outline"
+            },
+            {
+                key: "settings",
+                title: t("navigation.appRouter.screenTitles.settings"),
+                focusedIcon: "cog",
+                unfocusedIcon: "cog-outline"
+            }
+        ],
+        [() => i18n.language]
+    );
 
     const renderScene = BottomNavigation.SceneMap({
         survey: SurveyScreen,

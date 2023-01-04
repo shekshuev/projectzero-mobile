@@ -26,6 +26,7 @@ const SettingsScreen = () => {
     const onLanguageSelected = value => {
         i18n.changeLanguage(value);
         setCurrentLanguage(value);
+        closeLanguageDialog();
     };
 
     return (
