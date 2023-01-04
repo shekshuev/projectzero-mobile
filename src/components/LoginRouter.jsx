@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 // import AppRouter from "./AppRouter";
-// import LocationDeniedScreen from "@screens/LocationDeniedScreen";
+import LocationDeniedScreen from "@screens/LocationDeniedScreen";
 import LoginScreen from "@screens/LoginScreen";
 
 const LoginRouter = () => {
@@ -14,11 +14,9 @@ const LoginRouter = () => {
                     <Text>22222222222</Text>
                 ) : (
                     // <AppRouter setIsAuth={setIsAuth} setIsLocationGranted={setIsLocationGranted} />
-                    // <LocationDeniedScreen setIsLocationGranted={setIsLocationGranted} />
-                    <Text>22222222222</Text>
+                    <LocationDeniedScreen setIsLocationGranted={setIsLocationGranted} />
                 )
             ) : (
-                // <LocationDeniedScreen setIsLocationGranted={setIsLocationGranted} />
                 <LoginScreen setIsAuth={setIsAuth} />
             )}
         </View>

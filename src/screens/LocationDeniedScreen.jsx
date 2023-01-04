@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Image, Dimensions, AppState } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, Text, ActivityIndicator } from "react-native-paper";
 import * as Linking from "expo-linking";
 import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 const LocationDeniedScreen = props => {
     const [appState, setAppState] = useState(AppState.currentState);
     const [serviceEnabled, setServiceEnabled] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const { t } = useTranslation();
     useEffect(() => {
@@ -26,6 +27,7 @@ const LocationDeniedScreen = props => {
                 if (serviceEnabled) {
                     props.setIsLocationGranted(true);
                 }
+                setLoading(false);
             } else {
                 const result = await Location.requestForegroundPermissionsAsync();
                 if (result.granted === true && result.status === "granted") {
@@ -33,6 +35,7 @@ const LocationDeniedScreen = props => {
                         props.setIsLocationGranted(true);
                     }
                 }
+                setLoading(false);
             }
         });
     }, [appState, serviceEnabled]);
@@ -46,17 +49,27 @@ const LocationDeniedScreen = props => {
 
     return (
         <View style={styles.container}>
-            <Image style={styles.img} source={require("@assets/images/locationDenied.png")} resizeMode="contain" />
-            <Text style={styles.text} variant="bodyMedium">
-                {t("screens.locationDenied.placeholder")}
-            </Text>
-            <Button
-                icon="cog"
-                onPress={() => {
-                    Linking.openSettings();
-                }}>
-                {t("screens.locationDenied.button")}
-            </Button>
+            {loading ? (
+                <ActivityIndicator size="large" animating={true} />
+            ) : (
+                <>
+                    <Image
+                        style={styles.img}
+                        source={require("@assets/images/locationDenied.png")}
+                        resizeMode="contain"
+                    />
+                    <Text style={styles.text} variant="bodyMedium">
+                        {t("screens.locationDenied.placeholder")}
+                    </Text>
+                    <Button
+                        icon="cog"
+                        onPress={() => {
+                            Linking.openSettings();
+                        }}>
+                        {t("screens.locationDenied.button")}
+                    </Button>
+                </>
+            )}
         </View>
     );
 };
