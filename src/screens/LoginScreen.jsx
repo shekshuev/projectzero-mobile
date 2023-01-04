@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { ActivityIndicator, TextInput, Button, Snackbar } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
-import { isTokenStillFresh } from "@utils/jwt";
-import { JwtError } from "@utils/errors";
 import { useTranslation } from "react-i18next";
 import { signIn } from "@features/auth/authApi";
 
-const LoginScreen = ({ setIsAuth }) => {
+const LoginScreen = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const accessToken = useSelector(state => state.auth.accessToken);
     const error = useSelector(state => state.auth.error);
     const loading = useSelector(state => state.auth.loading);
 
@@ -29,18 +26,6 @@ const LoginScreen = ({ setIsAuth }) => {
             setSnackbarVisible(true);
         }
     }, [error]);
-
-    useEffect(() => {
-        try {
-            if (isTokenStillFresh(accessToken)) {
-                setIsAuth(true);
-            }
-        } catch (e) {
-            if (e instanceof JwtError) {
-                setIsAuth(false);
-            }
-        }
-    }, [accessToken]);
 
     return (
         <>

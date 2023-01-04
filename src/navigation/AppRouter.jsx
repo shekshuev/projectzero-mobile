@@ -7,8 +7,7 @@ import { AppState } from "react-native";
 import * as Location from "expo-location";
 import { getCurrentPosition } from "@features/location/locationApi";
 import { getAvailableSurveys } from "@features/survey/surveyApi";
-
-const SettingsScreen = () => <Text>Settings</Text>;
+import SettingsScreen from "@screens/SettingsScreen";
 
 const QueueScreen = () => <Text>Queue</Text>;
 

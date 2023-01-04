@@ -19,6 +19,21 @@
         "locationDenied": {
             "placeholder": "App for some reason couldn't access your location. Fix it manually in phone settings and then reload app.",
             "button": "Open settings"
+        },
+        "settings": {
+            "exitModal": {
+                "title": "Are you sure you want to quit?",
+                "yes": "Yes",
+                "no": "No"
+            },
+            "languageModal": {
+                "cancel": "Cancel",
+                "title": "Choose language",
+                "ru": "Russian",
+                "en": "English"
+            },
+            "exit": "Exit",
+            "chooseLanguage": "Choose language"
         }
     },
     "ActiveSurvey": {
@@ -71,15 +86,6 @@
             }
         },
         "empty": "There is no surveys in queue now"
-    },
-    "Settings": {
-        "modal": {
-            "title": "Are you sure you want to quit?",
-            "yes": "Yes",
-            "no": "No"
-        },
-        "exit": "Exit",
-        "chooseLanguage": "Choose language"
     },
     "Surveys": {
         "noSurvInArea": "No surveys in your area",
