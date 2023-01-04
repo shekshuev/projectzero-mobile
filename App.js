@@ -1,6 +1,6 @@
 import { StyleSheet, SafeAreaView, LogBox } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
-import LoginRouter from "@components/LoginRouter.jsx";
+import LoginRouter from "@navigation/LoginRouter";
 import React from "react";
 import { Provider } from "react-redux";
 import store from "@store/store";

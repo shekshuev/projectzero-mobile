@@ -14,7 +14,8 @@ module.exports = function (api) {
                         "@store": "./src/store",
                         "@localization": "./src/localization",
                         "@api": "./src/api",
-                        "@utils": "./src/utils"
+                        "@utils": "./src/utils",
+                        "@navigation": "./src/navigation"
                     },
                     extensions: [".js", ".jsx", ".ts", ".tsx"]
                 }

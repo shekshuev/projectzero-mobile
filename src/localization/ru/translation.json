@@ -1,4 +1,13 @@
 {
+    "navigation": {
+        "appRouter": {
+            "screenTitles": {
+                "surveys": "Опросы",
+                "queue": "Ожидание",
+                "settings": "Настройки"
+            }
+        }
+    },
     "screens": {
         "login": {
             "loginButton": "Вход",
@@ -35,13 +44,6 @@
             "back": "Назад",
             "finish": "Завершить",
             "next": "Далее"
-        }
-    },
-    "AppRouter": {
-        "screenTitles": {
-            "surveys": "Опросы",
-            "queue": "Ожидание",
-            "settings": "Настройки"
         }
     },
     "Background": {
