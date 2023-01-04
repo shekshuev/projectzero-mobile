@@ -52,7 +52,7 @@ const AppRouter = () => {
     const [isGpsEnabled, setGpsEnabled] = useState(true);
     const [appState, setAppState] = useState(AppState.currentState);
 
-    useEffect(async () => {
+    useEffect(() => {
         const interval = setInterval(async () => {
             const status = await Location.getProviderStatusAsync();
             setGpsEnabled(status.gpsAvailable);

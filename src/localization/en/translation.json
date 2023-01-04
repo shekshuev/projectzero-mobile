@@ -13,6 +13,9 @@
             },
             "activeSurvey": {
                 "title": "Active survey"
+            },
+            "surveyInfo": {
+                "title": "Survey info"
             }
         }
     },
@@ -44,7 +47,17 @@
             "chooseLanguage": "Choose language"
         },
         "survey": {
-            "noSurveys": "No surveys for your location"
+            "noSurveys": "No surveys for your location",
+            "pullDown": "Pull down to refresh"
+        },
+        "surveyInfo": {
+            "beginDate": "Begin date and time",
+            "endDate": "End date and time",
+            "title": "Title",
+            "description": "Description",
+            "form": "Form",
+            "questionsCount": "Questions count",
+            "startSurvey": "Start survey"
         }
     },
     "ActiveSurvey": {

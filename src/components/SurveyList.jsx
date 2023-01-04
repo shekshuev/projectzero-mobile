@@ -1,9 +1,9 @@
 import { List } from "react-native-paper";
 import SurveyListItem from "@components/SurveyListItem";
 
-const SurveyList = ({ surveys, loading }) => {
+const SurveyList = ({ surveys, loading, onListItemClicked }) => {
     const onItemSelected = survey => {
-        console.log(survey.id);
+        onListItemClicked?.call?.(this, survey.id);
     };
     return (
         <List.Section>

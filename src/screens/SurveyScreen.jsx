@@ -6,7 +6,7 @@ import { Avatar, Text, Snackbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 
-const SurveyScreen = () => {
+const SurveyScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const surveys = useSelector(store => store.survey.surveys);
@@ -18,6 +18,10 @@ const SurveyScreen = () => {
     const onRefresh = () => {
         setSnackbarVisible(false);
         dispatch(getAvailableSurveys());
+    };
+
+    const onListItemClicked = surveyId => {
+        navigation.navigate("surveyInfo", { id: surveyId });
     };
 
     useEffect(() => {
@@ -38,9 +42,12 @@ const SurveyScreen = () => {
                             <Text style={styles.message} variant="headlineSmall">
                                 {t("screens.survey.noSurveys")}
                             </Text>
+                            <Text style={styles.message} variant="labelSmall">
+                                {t("screens.survey.pullDown")}
+                            </Text>
                         </View>
                     ) : (
-                        <SurveyList loading={loading} surveys={surveys} />
+                        <SurveyList onListItemClicked={onListItemClicked} loading={loading} surveys={surveys} />
                     )}
                 </ScrollView>
             </View>
