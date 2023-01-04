@@ -6,6 +6,10 @@
                 "login": "Username",
                 "password": "Password"
             }
+        },
+        "locationDenied": {
+            "placeholder": "App for some reason couldn't access your location. Fix it manually in phone settings and then reload app.",
+            "button": "Open settings"
         }
     },
     "ActiveSurvey": {
@@ -44,15 +48,6 @@
         "caption": "Background sending",
         "enabled": "On",
         "disabled": "Off"
-    },
-    "LocationDenied": {
-        "placeholder": "App for some reason couldn't access your location. Fix it manually in phone settings and then reload app.",
-        "button": "Open settings"
-    },
-    "Login": {
-        "changeIP": "changeAddress",
-        "wrongCreds": "Wrong login or password",
-        "connectionError": "Problems with connection"
     },
     "Queue": {
         "item": {

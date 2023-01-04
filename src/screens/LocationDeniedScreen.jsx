@@ -48,14 +48,14 @@ const LocationDeniedScreen = props => {
         <View style={styles.container}>
             <Image style={styles.img} source={require("@assets/images/locationDenied.png")} resizeMode="contain" />
             <Text style={styles.text} variant="bodyMedium">
-                {t("LocationDenied.placeholder")}
+                {t("screens.locationDenied.placeholder")}
             </Text>
             <Button
                 icon="cog"
                 onPress={() => {
                     Linking.openSettings();
                 }}>
-                {t("LocationDenied.button")}
+                {t("screens.locationDenied.button")}
             </Button>
         </View>
     );
