@@ -6,6 +6,14 @@
                 "queue": "Queue",
                 "settings": "Settings"
             }
+        },
+        "surveyRouter": {
+            "surveys": {
+                "title": "Survey list"
+            },
+            "activeSurvey": {
+                "title": "Active survey"
+            }
         }
     },
     "screens": {
@@ -34,6 +42,9 @@
             },
             "exit": "Exit",
             "chooseLanguage": "Choose language"
+        },
+        "survey": {
+            "noSurveys": "No surveys for your location"
         }
     },
     "ActiveSurvey": {

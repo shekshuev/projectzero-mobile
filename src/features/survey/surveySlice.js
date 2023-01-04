@@ -4,7 +4,7 @@ import { getAvailableSurveys } from "@features/survey/surveyApi";
 export const surveySlice = createSlice({
     name: "survey",
     initialState: {
-        surveys: [],
+        surveys: null,
         loading: false,
         error: null
     },
@@ -21,7 +21,7 @@ export const surveySlice = createSlice({
                 state.accessToken = null;
             })
             .addCase(getAvailableSurveys.fulfilled, (state, action) => {
-                state.surveys = action.payload?.data?.surveys;
+                state.surveys = action.payload?.data?.surveys || [];
                 state.loading = false;
                 state.error = null;
             })
@@ -29,7 +29,6 @@ export const surveySlice = createSlice({
                 state.loading = false;
                 state.surveys = [];
                 state.error = action.error?.message || "Unknown error";
-                console.log(action.error);
             });
     }
 });

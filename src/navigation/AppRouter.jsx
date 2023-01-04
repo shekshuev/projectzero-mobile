@@ -8,10 +8,9 @@ import * as Location from "expo-location";
 import { getCurrentPosition } from "@features/location/locationApi";
 import { getAvailableSurveys } from "@features/survey/surveyApi";
 import SettingsScreen from "@screens/SettingsScreen";
+import SurveyRouter from "@navigation/SurveyRouter";
 
 const QueueScreen = () => <Text>Queue</Text>;
-
-const SurveyScreen = () => <Text>Survey</Text>;
 
 const AppRouter = () => {
     const { t, i18n } = useTranslation();
@@ -42,14 +41,13 @@ const AppRouter = () => {
     );
 
     const renderScene = BottomNavigation.SceneMap({
-        survey: SurveyScreen,
+        survey: SurveyRouter,
         settings: SettingsScreen,
         queue: QueueScreen
     });
 
     const dispatch = useDispatch();
     const currentPosition = useSelector(state => state.location.position);
-    const surveys = useSelector(state => state.survey.surveys);
 
     const [isGpsEnabled, setGpsEnabled] = useState(true);
     const [appState, setAppState] = useState(AppState.currentState);
@@ -76,20 +74,11 @@ const AppRouter = () => {
         if (currentPosition) {
             NetInfo.fetch().then(async state => {
                 if (state.isConnected && state.isInternetReachable) {
-                    dispatch(
-                        getAvailableSurveys({
-                            latitude: currentPosition?.latitude,
-                            longitude: currentPosition?.longitude
-                        })
-                    );
+                    dispatch(getAvailableSurveys());
                 }
             });
         }
     }, [currentPosition]);
-
-    useEffect(() => {
-        console.log(surveys);
-    }, [surveys]);
 
     return <BottomNavigation navigationState={{ index, routes }} onIndexChange={setIndex} renderScene={renderScene} />;
 };

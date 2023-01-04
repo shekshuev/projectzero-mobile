@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import AppRouter from "@navigation/AppRouter";
 import LocationDeniedScreen from "@screens/LocationDeniedScreen";
 import LoginScreen from "@screens/LoginScreen";
@@ -14,7 +14,6 @@ const LoginRouter = () => {
     const [isAuth, setIsAuth] = useState(false);
 
     useEffect(() => {
-        console.log(accessToken);
         if (accessToken) {
             try {
                 if (isTokenStillFresh(accessToken)) {

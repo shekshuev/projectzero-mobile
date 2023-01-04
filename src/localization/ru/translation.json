@@ -6,6 +6,14 @@
                 "queue": "Ожидание",
                 "settings": "Настройки"
             }
+        },
+        "surveyRouter": {
+            "surveys": {
+                "title": "Список опросов"
+            },
+            "activeSurvey": {
+                "title": "Активный опрос"
+            }
         }
     },
     "screens": {
@@ -34,6 +42,9 @@
             },
             "exit": "Выйти",
             "chooseLanguage": "Выберите язык"
+        },
+        "survey": {
+            "noSurveys": "Нет опросов для вашего метоположения"
         }
     },
     "ActiveSurvey": {
