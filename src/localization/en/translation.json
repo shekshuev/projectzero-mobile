@@ -1,0 +1,100 @@
+{
+    "screens": {
+        "login": {
+            "loginButton": "Login",
+            "inputLabels": {
+                "login": "Username",
+                "password": "Password"
+            }
+        }
+    },
+    "ActiveSurvey": {
+        "startScreen": {
+            "startText": "Are you ready to pass survey?",
+            "button": "Start"
+        },
+        "emptySurvey": {
+            "title": "Sorry, there is no one question in this survey",
+            "toListButton": "To list"
+        },
+        "endSurvey": {
+            "approvalText": "Are you sure you want to finish this survey?",
+            "yesButton": "Yes",
+            "noButton": "No"
+        },
+        "sending": {
+            "success": "Survey have successfully sent, wait for redirect.",
+            "putToQueue": "There is some error while sending. Survey redirected to queue.",
+            "failToQueue": "There is some error while sending and redirecting to queue. Pass survey one more time."
+        },
+        "menuButtons": {
+            "back": "Back",
+            "finish": "Finish",
+            "next": "Next"
+        }
+    },
+    "AppRouter": {
+        "screenTitles": {
+            "surveys": "Surveys",
+            "queue": "Queue",
+            "settings": "Settings"
+        }
+    },
+    "Background": {
+        "caption": "Background sending",
+        "enabled": "On",
+        "disabled": "Off"
+    },
+    "LocationDenied": {
+        "placeholder": "App for some reason couldn't access your location. Fix it manually in phone settings and then reload app.",
+        "button": "Open settings"
+    },
+    "Login": {
+        "changeIP": "changeAddress",
+        "wrongCreds": "Wrong login or password",
+        "connectionError": "Problems with connection"
+    },
+    "Queue": {
+        "item": {
+            "noTitle": "Empty title",
+            "noDescr": "Empty description",
+            "indexCaption": "Survey's ID:",
+            "noIndex": "No index",
+            "errorTitle": "Reason for placing survey in queue:",
+            "noErrorInf": "No info",
+            "delayedSendingError": "Error while sending in background mode"
+        },
+        "buttons": {
+            "deleting": "Delete",
+            "sending": {
+                "default": "Send",
+                "processing": "Sending...",
+                "success": "Success!",
+                "error": "Error!"
+            }
+        },
+        "empty": "There is no surveys in queue now"
+    },
+    "Settings": {
+        "modal": {
+            "title": "Are you sure you want to quit?",
+            "yes": "Yes",
+            "no": "No"
+        },
+        "exit": "Exit",
+        "chooseLanguage": "Choose language"
+    },
+    "Surveys": {
+        "noSurvInArea": "No surveys in your area",
+        "noSurvAtAll": "No surveys in any location"
+    },
+    "SurveyTemp": {
+        "noTitle": "Empty title",
+        "noDescr": "Empty description"
+    },
+    "UI": {
+        "Timer": {
+            "attention": "Connection will be aborted when timer is out"
+        }
+    }
+}
