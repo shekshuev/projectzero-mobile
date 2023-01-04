@@ -3,7 +3,7 @@
         "appRouter": {
             "screenTitles": {
                 "surveys": "Surveys",
-                "queue": "Queue",
+                "results": "Results",
                 "settings": "Settings"
             }
         },
@@ -16,6 +16,16 @@
             },
             "surveyInfo": {
                 "title": "Survey info"
+            }
+        },
+        "resultsRouter": {
+            "results": {
+                "title": "Results"
+            }
+        },
+        "settingsRouter": {
+            "settings": {
+                "title": "Settings"
             }
         }
     },
@@ -43,8 +53,18 @@
                 "ru": "Russian",
                 "en": "English"
             },
-            "exit": "Exit",
-            "chooseLanguage": "Choose language"
+            "common": {
+                "header": "Common",
+                "language": "Language"
+            },
+            "exit": "Logout",
+            "about": {
+                "header": "About app",
+                "name": "Name",
+                "author": "Author",
+                "email": "Email",
+                "version": "Version"
+            }
         },
         "survey": {
             "noSurveys": "No surveys for your location",
@@ -58,6 +78,10 @@
             "form": "Form",
             "questionsCount": "Questions count",
             "startSurvey": "Start survey"
+        },
+        "results": {
+            "noResults": "You haven't any finished surveys yet",
+            "pullDown": "Pull down to refresh"
         }
     },
     "ActiveSurvey": {

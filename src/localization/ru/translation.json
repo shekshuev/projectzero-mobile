@@ -3,7 +3,7 @@
         "appRouter": {
             "screenTitles": {
                 "surveys": "Опросы",
-                "queue": "Ожидание",
+                "results": "Результаты",
                 "settings": "Настройки"
             }
         },
@@ -16,6 +16,16 @@
             },
             "surveyInfo": {
                 "title": "Информация об опросе"
+            }
+        },
+        "resultsRouter": {
+            "results": {
+                "title": "Результаты"
+            }
+        },
+        "settingsRouter": {
+            "settings": {
+                "title": "Настройки"
             }
         }
     },
@@ -43,8 +53,18 @@
                 "ru": "Русский",
                 "en": "Английский"
             },
+            "common": {
+                "header": "Общее",
+                "language": "Язык"
+            },
             "exit": "Выйти",
-            "chooseLanguage": "Выберите язык"
+            "about": {
+                "header": "О приложении",
+                "name": "Название",
+                "author": "Автор",
+                "email": "Email",
+                "version": "Версия"
+            }
         },
         "survey": {
             "noSurveys": "Нет опросов для вашего метоположения",
@@ -56,6 +76,10 @@
             "form": "Бланк опроса",
             "questionsCount": "Количество вопросов",
             "startSurvey": "Начать опрос"
+        },
+        "results": {
+            "noResults": "У вас еще нет завершенных опросов",
+            "pullDown": "Потяните вниз, чтобы обновить"
         }
     },
     "ActiveSurvey": {

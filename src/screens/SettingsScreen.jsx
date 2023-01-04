@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useMemo, useState } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { useDispatch } from "react-redux";
-import { Button, Portal, Dialog, Text, RadioButton } from "react-native-paper";
+import { Button, Portal, Dialog, Text, RadioButton, List } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { setAccessToken } from "@features/auth/authSlice";
 
@@ -29,15 +29,40 @@ const SettingsScreen = () => {
         closeLanguageDialog();
     };
 
+    const languages = useMemo(
+        () => ({
+            ru: t("screens.settings.languageModal.ru"),
+            en: t("screens.settings.languageModal.en")
+        }),
+        [() => i18n.language]
+    );
+
+    const appInfo = {
+        name: "Project Zero Mobile",
+        version: "0.1",
+        author: "Sergei Shekshuev",
+        email: "sergei.shekshuev@gmail.com"
+    };
+
     return (
-        <>
+        <ScrollView>
+            <List.Section>
+                <List.Subheader>{t("screens.settings.common.header")}</List.Subheader>
+                <List.Item
+                    title={t("screens.settings.common.language")}
+                    description={() => <Text variant="bodyMedium">{languages[currentLanguage]}</Text>}
+                    onPress={openLanguageDialog}
+                />
+            </List.Section>
+            <List.Section>
+                <List.Subheader>{t("screens.settings.about.header")}</List.Subheader>
+                <List.Item title={t("screens.settings.about.name")} description={appInfo.name} />
+                <List.Item title={t("screens.settings.about.version")} description={appInfo.version} />
+                <List.Item title={t("screens.settings.about.author")} description={appInfo.author} />
+                <List.Item title={t("screens.settings.about.email")} description={appInfo.email} />
+            </List.Section>
             <View style={styles.container}>
-                <Button mode="contained" onPress={openLanguageDialog} style={{ marginBottom: 10 }}>
-                    {t("screens.settings.chooseLanguage")}
-                </Button>
-                <Button mode="contained" onPress={openExitDialog}>
-                    {t("screens.settings.exit")}
-                </Button>
+                <Button onPress={openExitDialog}>{t("screens.settings.exit")}</Button>
             </View>
             <Portal>
                 <Dialog visible={isExitModalVisible} onDismiss={closeExitDialog}>
@@ -72,7 +97,7 @@ const SettingsScreen = () => {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-        </>
+        </ScrollView>
     );
 };
 
