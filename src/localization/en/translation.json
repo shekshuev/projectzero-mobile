@@ -82,6 +82,12 @@
         "results": {
             "noResults": "You haven't any finished surveys yet",
             "pullDown": "Pull down to refresh"
+        },
+        "activeSurvey": {
+            "required": "Required",
+            "next": "Next",
+            "withoutAnswer": "Without answer",
+            "finish": "Finish"
         }
     },
     "components": {

@@ -80,6 +80,12 @@
         "results": {
             "noResults": "У вас еще нет завершенных опросов",
             "pullDown": "Потяните вниз, чтобы обновить"
+        },
+        "activeSurvey": {
+            "required": "Обязательный",
+            "next": "Далее",
+            "withoutAnswer": "Оставить без ответа",
+            "finish": "Завершить"
         }
     },
     "components": {

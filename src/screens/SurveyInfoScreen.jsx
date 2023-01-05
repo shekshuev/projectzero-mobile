@@ -5,14 +5,14 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { ScrollView, StyleSheet } from "react-native";
 
-const SurveyInfoScreen = ({ route }) => {
+const SurveyInfoScreen = ({ route, navigation }) => {
     const { t } = useTranslation();
     const { id } = route.params;
     const surveys = useSelector(store => store.survey.surveys);
     const survey = useMemo(() => surveys?.find(s => s.id === id), [id]);
 
     const onStartSurveyButtonClicked = () => {
-        console.log(123);
+        navigation.navigate("activeSurvey", { id });
     };
 
     return (
