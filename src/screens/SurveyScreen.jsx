@@ -4,14 +4,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { getAvailableSurveys } from "@features/survey/surveyApi";
 import { Avatar, Text, Snackbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 const SurveyScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const surveys = useSelector(store => store.survey.surveys);
     const error = useSelector(store => store.survey.error);
-    const loading = useSelector(store => store.survey.loading);
+
+    const surveyLoading = useSelector(store => store.survey.loading);
+    const locationLoading = useSelector(store => store.location.loading);
+    const loading = useMemo(() => surveyLoading || locationLoading, [surveyLoading, locationLoading]);
 
     const [isSnackbarVisible, setSnackbarVisible] = useState(false);
 
