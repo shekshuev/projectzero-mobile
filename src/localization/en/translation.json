@@ -85,9 +85,9 @@
         },
         "activeSurvey": {
             "required": "Required",
-            "next": "Next",
-            "withoutAnswer": "Without answer",
-            "finish": "Finish"
+            "submit": "Submit",
+            "finish": "Finish",
+            "success": "Survey successfully finished"
         }
     },
     "components": {

@@ -1,8 +1,9 @@
-import { Text, RadioButton, Button, Checkbox, TextInput } from "react-native-paper";
-import { useSelector } from "react-redux";
+import { Text, RadioButton, Button, Checkbox, TextInput, ProgressBar, Avatar } from "react-native-paper";
+import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useMemo, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
+import { addResult } from "@features/results/resultSlice";
 
 const QuestionHeader = ({ question }) => {
     const { t } = useTranslation();
@@ -87,6 +88,7 @@ const Open = ({ question, onAnswerSelected }) => {
 
 const ActiveSurvey = ({ route }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const { id } = route.params;
     const currentPosition = useSelector(state => state.location.position);
     const surveys = useSelector(state => state.survey.surveys);
@@ -113,21 +115,68 @@ const ActiveSurvey = ({ route }) => {
         return false;
     }, [filled]);
 
-    const onNextQuestionButtonClicked = () => {
+    const canFinish = useMemo(() => {
+        const numberOfRequiredQuestionsLeft = questions?.filter(
+            question =>
+                question.question.required && (!question.selectedAnswer || question.selectedAnswer?.length === 0)
+        )?.length;
+        return numberOfRequiredQuestionsLeft === 0;
+    }, [filled]);
+
+    const canHideSubmitButton = useMemo(
+        () => canFinish && activeIndex + 1 === questions?.length,
+        [canFinish, activeIndex]
+    );
+
+    const isSurveyFinished = useMemo(() => filled.surveyId && filled.completed, [filled]);
+
+    const setEndTime = () => {
         setFilled({
             ...filled,
             questions: questions?.map((q, i) => {
                 if (i === activeIndex) {
                     return {
                         ...q,
-                        endDate: new Date()
+                        endDates: [...q.endDates, new Date()]
                     };
                 } else {
                     return q;
                 }
             })
         });
-        setActiveIndex(activeIndex === questions?.length - 1 ? 0 : activeIndex + 1);
+    };
+
+    const onFinishButtonClick = () => {
+        setFilled({
+            ...filled,
+            endDate: new Date(),
+            surveyId: survey.id,
+            completed: true,
+            questions: questions?.map((q, i) => {
+                if (i === activeIndex) {
+                    return {
+                        ...q,
+                        endDates: [...q.endDates, new Date()]
+                    };
+                } else {
+                    return q;
+                }
+            })
+        });
+    };
+
+    const onSubmitButtonClick = () => {
+        onNextQuestionButtonClicked();
+    };
+
+    const onNextQuestionButtonClicked = () => {
+        setEndTime();
+        setActiveIndex(activeIndex === questions?.length - 1 ? activeIndex : activeIndex + 1);
+    };
+
+    const onPrevQuestionButtonClicked = () => {
+        setEndTime();
+        setActiveIndex(activeIndex === 0 ? 0 : activeIndex - 1);
     };
 
     const onAnswerSelected = answer => {
@@ -148,7 +197,6 @@ const ActiveSurvey = ({ route }) => {
 
     useEffect(() => {
         setFilled({
-            surveyId: survey.id,
             beginDate: new Date(),
             endDate: null,
             completed: false,
@@ -162,8 +210,8 @@ const ActiveSurvey = ({ route }) => {
             questions: survey.form.questions?.map(q => ({
                 question: q,
                 selectedAnswer: null,
-                beginDate: null,
-                endDate: null
+                beginDates: [],
+                endDates: []
             }))
         });
         setActiveIndex(0);
@@ -177,7 +225,7 @@ const ActiveSurvey = ({ route }) => {
                     if (i === activeIndex) {
                         return {
                             ...q,
-                            beginDate: new Date()
+                            beginDates: [...q.beginDates, new Date()]
                         };
                     } else {
                         return q;
@@ -187,41 +235,86 @@ const ActiveSurvey = ({ route }) => {
         }
     }, [activeIndex]);
 
+    useEffect(() => {
+        if (filled.surveyId && filled.completed) {
+            dispatch(addResult(filled));
+        }
+    }, [filled]);
+
     return (
-        <View style={styles.container}>
-            {activeQuestion?.question?.type === "single" ? (
-                <Single question={activeQuestion} onAnswerSelected={onAnswerSelected} />
-            ) : activeQuestion?.question?.type === "multiple" ? (
-                <Multiple question={activeQuestion} onAnswerSelected={onAnswerSelected} />
-            ) : activeQuestion?.question?.type === "open" ? (
-                <Open question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+        <>
+            {isSurveyFinished ? (
+                <View style={styles.empty}>
+                    <Avatar.Icon size={100} icon="check" />
+                    <Text style={styles.message} variant="headlineSmall">
+                        {t("screens.activeSurvey.success")}
+                    </Text>
+                </View>
             ) : (
-                ""
+                <View style={styles.container}>
+                    <View>
+                        <View style={styles.progressControls}>
+                            <Button icon="chevron-left" onPress={onPrevQuestionButtonClicked} />
+                            <Text variant="titleLarge">{`${activeIndex + 1} / ${questions?.length}`}</Text>
+                            <Button disabled={!canGoNext} icon="chevron-right" onPress={onNextQuestionButtonClicked} />
+                        </View>
+                        <ProgressBar progress={(activeIndex + 1) / questions?.length || 0} />
+                    </View>
+                    {activeQuestion?.question?.type === "single" ? (
+                        <Single question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+                    ) : activeQuestion?.question?.type === "multiple" ? (
+                        <Multiple question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+                    ) : activeQuestion?.question?.type === "open" ? (
+                        <Open question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+                    ) : (
+                        ""
+                    )}
+                    {questions?.length > 0 && (
+                        <View>
+                            {!canHideSubmitButton && (
+                                <Button disabled={!canGoNext} mode="contained-tonal" onPress={onSubmitButtonClick}>
+                                    {t("screens.activeSurvey.submit")}
+                                </Button>
+                            )}
+                            {canFinish && (
+                                <Button style={styles.finishButton} mode="contained" onPress={onFinishButtonClick}>
+                                    {t("screens.activeSurvey.finish")}
+                                </Button>
+                            )}
+                        </View>
+                    )}
+                </View>
             )}
-            {questions?.length > 0 && (
-                <Button
-                    style={styles.button}
-                    disabled={!canGoNext}
-                    mode="contained"
-                    onPress={onNextQuestionButtonClicked}>
-                    {t("screens.activeSurvey.next")}
-                </Button>
-            )}
-        </View>
+        </>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-between",
         padding: 10
     },
     title: {
         marginBottom: 10
     },
-    button: {
-        width: "100%",
+    progressControls: {
+        marginBottom: 8,
+        flexDirection: "row",
+        justifyContent: "space-between"
+    },
+    finishButton: {
+        marginTop: 10
+    },
+    empty: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+        textAlign: "center"
+    },
+    message: {
+        textAlign: "center",
         marginTop: 10
     }
 });

@@ -83,9 +83,9 @@
         },
         "activeSurvey": {
             "required": "Обязательный",
-            "next": "Далее",
-            "withoutAnswer": "Оставить без ответа",
-            "finish": "Завершить"
+            "submit": "Ответить",
+            "finish": "Завершить",
+            "success": "Опрос успешно завершен"
         }
     },
     "components": {
