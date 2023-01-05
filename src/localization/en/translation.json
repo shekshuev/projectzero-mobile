@@ -93,6 +93,9 @@
     "components": {
         "surveyList": {
             "lastUpdatedAt": "Last updated at: "
+        },
+        "pendingResultListItem": {
+            "pending": "Pending"
         }
     }
 }

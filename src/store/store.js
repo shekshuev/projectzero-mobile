@@ -22,12 +22,20 @@ const persistedSurveyReducer = persistReducer(
     surveyReducer
 );
 
+const persistedResultReducer = persistReducer(
+    {
+        key: "result",
+        storage: AsyncStorage
+    },
+    resultReducer
+);
+
 export const store = configureStore({
     reducer: {
         auth: persistedAuthReducer,
         location: locationReducer,
         survey: persistedSurveyReducer,
-        result: resultReducer
+        result: persistedResultReducer
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({

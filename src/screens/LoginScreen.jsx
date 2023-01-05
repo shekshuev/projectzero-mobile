@@ -35,14 +35,14 @@ const LoginScreen = () => {
                 ) : (
                     <>
                         <TextInput
-                            mode="outlined"
+                            mode="flat"
                             value={userName}
                             label={t("screens.login.inputLabels.login")}
                             onChangeText={setUserName}
                             style={{ marginBottom: 10 }}
                         />
                         <TextInput
-                            mode="outlined"
+                            mode="flat"
                             value={password}
                             secureTextEntry={isPasswordVisible}
                             right={

@@ -91,6 +91,9 @@
     "components": {
         "surveyList": {
             "lastUpdatedAt": "Последнее обновление: "
+        },
+        "pendingResultListItem": {
+            "pending": "Ожидается отправка"
         }
     }
 }

@@ -1,5 +1,5 @@
 import { StyleSheet, ScrollView, View, RefreshControl } from "react-native";
-import SurveyList from "@components/SurveyList";
+import ResultList from "@components/ResultList";
 import { useSelector } from "react-redux";
 import { Avatar, Text, Snackbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
@@ -7,9 +7,15 @@ import { useEffect, useState } from "react";
 
 const ResultsScreen = ({ navigation }) => {
     const { t } = useTranslation();
-    const results = useSelector(store => store.result.result);
-    const error = useSelector(store => store.result.error);
-    const loading = useSelector(store => store.result.loading);
+    const surveys = useSelector(state => state.survey.surveys);
+    const results = useSelector(state =>
+        state.result.results?.map(r => ({
+            ...r,
+            survey: surveys?.find(s => s.id === r.surveyId)
+        }))
+    );
+    const error = useSelector(state => state.result.error);
+    const loading = useSelector(state => state.result.loading);
 
     const [isSnackbarVisible, setSnackbarVisible] = useState(false);
 
@@ -44,7 +50,7 @@ const ResultsScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     ) : (
-                        <SurveyList onListItemClicked={onListItemClicked} loading={loading} surveys={surveys} />
+                        <ResultList onListItemClicked={onListItemClicked} loading={loading} results={results} />
                     )}
                 </ScrollView>
             </View>

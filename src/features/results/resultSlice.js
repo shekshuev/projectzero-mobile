@@ -5,7 +5,8 @@ export const resultSlice = createSlice({
     initialState: {
         results: [],
         loading: false,
-        error: null
+        error: null,
+        lastUpdatedAt: Date.now()
     },
     reducers: {
         setResults: (state, action) => {
