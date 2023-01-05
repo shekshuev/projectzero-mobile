@@ -6,7 +6,8 @@ export const surveySlice = createSlice({
     initialState: {
         surveys: null,
         loading: false,
-        error: null
+        error: null,
+        lastUpdatedAt: Date.now()
     },
     reducers: {
         setSurveys: (state, action) => {
@@ -24,10 +25,10 @@ export const surveySlice = createSlice({
                 state.surveys = action.payload?.data?.surveys || [];
                 state.loading = false;
                 state.error = null;
+                state.lastUpdateAt = Date.now();
             })
             .addCase(getAvailableSurveys.rejected, (state, action) => {
                 state.loading = false;
-                state.surveys = [];
                 state.error = action.error?.message || "Unknown error";
             });
     }

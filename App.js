@@ -4,7 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import LoginRouter from "@navigation/LoginRouter";
 import React from "react";
 import { Provider } from "react-redux";
-import store from "@store/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@store/store";
 import "react-native-url-polyfill/auto";
 import "@localization/i18n";
 
@@ -12,11 +13,13 @@ export default function App() {
     LogBox.ignoreLogs(["Warning: ...", "Looks like"]);
     return (
         <Provider store={store}>
-            <PaperProvider>
-                <SafeAreaView style={styles.container}>
-                    <LoginRouter />
-                </SafeAreaView>
-            </PaperProvider>
+            <PersistGate loading={null} persistor={persistor}>
+                <PaperProvider>
+                    <SafeAreaView style={styles.container}>
+                        <LoginRouter />
+                    </SafeAreaView>
+                </PaperProvider>
+            </PersistGate>
         </Provider>
     );
 }
