@@ -13,6 +13,7 @@ const ResultList = ({ loading }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const lastUpdatedAt = useSelector(state => state.result.lastUpdateAt);
+    const offline = useSelector(state => state.auth.offline);
     const surveys = useSelector(state => state.survey.surveys);
     const pendingResults = useSelector(state =>
         state.result.pendingResults?.map(r => ({
@@ -62,11 +63,19 @@ const ResultList = ({ loading }) => {
                 <>
                     <List.Section>
                         {pendingResults?.map((result, i) => (
-                            <PendingResultListItem loading={loading} result={result} key={i} onSend={onSend} />
+                            <PendingResultListItem
+                                offline={offline}
+                                loading={loading}
+                                result={result}
+                                key={i}
+                                onSend={onSend}
+                            />
                         ))}
                     </List.Section>
                     <View style={styles.buttonContainer}>
-                        <Button onPress={onClearQueueButtonClicked}>{t("components.resultList.clear")}</Button>
+                        <Button disabled={offline} onPress={onClearQueueButtonClicked}>
+                            {t("components.resultList.clear")}
+                        </Button>
                     </View>
                 </>
             )}

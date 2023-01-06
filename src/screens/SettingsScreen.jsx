@@ -3,7 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import { useDispatch } from "react-redux";
 import { Button, Portal, Dialog, Text, RadioButton, List } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { setAccessToken } from "@features/auth/authSlice";
+import { logout } from "@features/auth/authSlice";
 
 const SettingsScreen = () => {
     const { t, i18n } = useTranslation();
@@ -19,8 +19,8 @@ const SettingsScreen = () => {
     const openLanguageDialog = () => setLanguageModalVisible(true);
     const closeLanguageDialog = () => setLanguageModalVisible(false);
 
-    const logout = () => {
-        dispatch(setAccessToken(null));
+    const onLogoutButtonClicked = () => {
+        dispatch(logout());
     };
 
     const onLanguageSelected = value => {
@@ -70,7 +70,7 @@ const SettingsScreen = () => {
                         <Text variant="bodyLarge">{t("screens.settings.exitModal.title")}</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={logout}>{t("screens.settings.exitModal.yes")}</Button>
+                        <Button onPress={onLogoutButtonClicked}>{t("screens.settings.exitModal.yes")}</Button>
                         <Button onPress={closeExitDialog}>{t("screens.settings.exitModal.no")}</Button>
                     </Dialog.Actions>
                 </Dialog>

@@ -6,11 +6,19 @@ export const authSlice = createSlice({
     initialState: {
         accessToken: null,
         loading: false,
-        error: null
+        error: null,
+        offline: false
     },
     reducers: {
         setAccessToken: (state, action) => {
             state.accessToken = action.payload;
+        },
+        setOffline: (state, action) => {
+            state.offline = action.payload;
+        },
+        logout: state => {
+            state.offline = false;
+            state.accessToken = false;
         }
     },
     extraReducers: builder => {
@@ -32,5 +40,5 @@ export const authSlice = createSlice({
     }
 });
 
-export const { setAccessToken } = authSlice.actions;
+export const { setAccessToken, setOffline, logout } = authSlice.actions;
 export default authSlice.reducer;

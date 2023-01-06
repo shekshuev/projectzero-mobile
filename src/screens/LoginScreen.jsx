@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import { ActivityIndicator, TextInput, Button, Snackbar } from "react-native-paper";
+import { View, StyleSheet, Image } from "react-native";
+import { ActivityIndicator, TextInput, Button, Snackbar, Text, useTheme } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { signIn } from "@features/auth/authApi";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { setOffline } from "@features/auth/authSlice";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const theme = useTheme();
 
     const error = useSelector(state => state.auth.error);
     const loading = useSelector(state => state.auth.loading);
@@ -27,43 +30,76 @@ const LoginScreen = () => {
         }
     }, [error]);
 
+    const goToSettings = () => {
+        navigation.navigate("settings");
+    };
+
+    const useOffline = () => {
+        dispatch(setOffline(true));
+    };
+
     return (
         <>
             <View style={styles.container}>
                 {loading ? (
-                    <ActivityIndicator size="large" animating={true} />
+                    <>
+                        <View />
+                        <ActivityIndicator size="large" animating={true} />
+                        <View />
+                    </>
                 ) : (
                     <>
-                        <TextInput
-                            mode="flat"
-                            value={userName}
-                            label={t("screens.login.inputLabels.login")}
-                            onChangeText={setUserName}
-                            style={{ marginBottom: 10 }}
-                        />
-                        <TextInput
-                            mode="flat"
-                            value={password}
-                            secureTextEntry={isPasswordVisible}
-                            right={
-                                <TextInput.Icon
-                                    icon={isPasswordVisible ? "eye" : "eye-off"}
-                                    onPressIn={() => {
-                                        setPasswordVisible(!isPasswordVisible);
-                                        return false;
-                                    }}
-                                />
-                            }
-                            label={t("screens.login.inputLabels.password")}
-                            onChangeText={setPassword}
-                            style={{ marginBottom: 10 }}
-                        />
-                        <Button
-                            mode="contained"
-                            disabled={!(userName?.length > 0 && password?.length > 0)}
-                            onPress={onLoginButtonClicked}>
-                            {t("screens.login.loginButton")}
-                        </Button>
+                        <View />
+                        <View>
+                            <View style={styles.centered}>
+                                <Image style={styles.image} source={require("@assets/images/splash.png")} />
+                                <Text variant="headlineMedium" style={{ color: theme.colors.primary }}>
+                                    PROJECT ZERO
+                                </Text>
+                                <Text variant="titleMedium" style={{ color: theme.colors.secondary, marginBottom: 20 }}>
+                                    mobile
+                                </Text>
+                            </View>
+                            <TextInput
+                                mode="flat"
+                                value={userName}
+                                label={t("screens.login.inputLabels.login")}
+                                onChangeText={setUserName}
+                                style={{ marginBottom: 10 }}
+                            />
+                            <TextInput
+                                mode="flat"
+                                value={password}
+                                secureTextEntry={isPasswordVisible}
+                                right={
+                                    <TextInput.Icon
+                                        icon={isPasswordVisible ? "eye" : "eye-off"}
+                                        onPressIn={() => {
+                                            setPasswordVisible(!isPasswordVisible);
+                                            return false;
+                                        }}
+                                    />
+                                }
+                                label={t("screens.login.inputLabels.password")}
+                                onChangeText={setPassword}
+                                style={{ marginBottom: 10 }}
+                            />
+                            <Button
+                                mode="contained"
+                                style={styles.loginButton}
+                                disabled={!(userName?.length > 0 && password?.length > 0)}
+                                onPress={onLoginButtonClicked}>
+                                {t("screens.login.loginButton")}
+                            </Button>
+                            <Button disabled={!(userName?.length > 0 && password?.length > 0)} onPress={useOffline}>
+                                {t("screens.login.useOffline")}
+                            </Button>
+                        </View>
+                        <View style={styles.bottomRow}>
+                            <Button onPress={goToSettings}>
+                                <MaterialCommunityIcons name="cog" size={20} color={theme.colors.primary} />
+                            </Button>
+                        </View>
                     </>
                 )}
             </View>
@@ -78,8 +114,24 @@ const styles = StyleSheet.create({
     container: {
         display: "flex",
         flex: 1,
-        justifyContent: "center",
+        justifyContent: "space-between",
         padding: 10
+    },
+    image: {
+        width: 250,
+        height: 250,
+        resizeMode: "contain"
+    },
+    centered: {
+        alignItems: "center"
+    },
+    bottomRow: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "center"
+    },
+    loginButton: {
+        marginBottom: 10
     }
 });
 

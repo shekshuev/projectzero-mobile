@@ -1,53 +1,39 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import AppRouter from "@navigation/AppRouter";
-import LocationDeniedScreen from "@screens/LocationDeniedScreen";
+import { NavigationContainer, useTheme } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useTranslation } from "react-i18next";
 import LoginScreen from "@screens/LoginScreen";
-import { useSelector } from "react-redux";
-import { isTokenStillFresh } from "@utils/jwt";
-import { JwtError } from "@utils/errors";
+import SettingsScreen from "@screens/SettingsScreen";
+
+const Stack = createNativeStackNavigator();
 
 const LoginRouter = () => {
-    const [isLocationGranted, setIsLocationGranted] = useState();
-    const accessToken = useSelector(store => store.auth.accessToken);
+    const { t } = useTranslation();
+    const theme = useTheme();
 
-    const [isAuth, setIsAuth] = useState(false);
-
-    useEffect(() => {
-        if (accessToken) {
-            try {
-                if (isTokenStillFresh(accessToken)) {
-                    setIsAuth(true);
-                }
-            } catch (e) {
-                if (e instanceof JwtError) {
-                    setIsAuth(false);
-                }
-            }
-        } else {
-            setIsAuth(false);
-        }
-    }, [accessToken]);
     return (
-        <View style={styles.container}>
-            {isAuth ? (
-                isLocationGranted ? (
-                    <AppRouter setIsLocationGranted={setIsLocationGranted} />
-                ) : (
-                    <LocationDeniedScreen setIsLocationGranted={setIsLocationGranted} />
-                )
-            ) : (
-                <LoginScreen />
-            )}
-        </View>
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    options={{
+                        title: t("navigation.loginRouter.login.title"),
+                        statusBarStyle: theme.dark ? "light" : "dark",
+                        statusBarColor: theme.colors.background,
+                        headerShown: false
+                    }}
+                    name="login"
+                    component={LoginScreen}
+                />
+                <Stack.Screen
+                    options={{
+                        statusBarStyle: theme.dark ? "light" : "dark",
+                        title: t("navigation.loginRouter.settings.title")
+                    }}
+                    name="settings"
+                    component={SettingsScreen}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        height: "100%"
-    }
-});
 
 export default LoginRouter;

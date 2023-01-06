@@ -4,7 +4,7 @@ import { View, StyleSheet } from "react-native";
 import moment from "moment";
 import { useTheme } from "react-native-paper";
 
-const PendingResultListItem = ({ result, loading, onSend, ...props }) => {
+const PendingResultListItem = ({ result, loading, offline, onSend, ...props }) => {
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -19,7 +19,9 @@ const PendingResultListItem = ({ result, loading, onSend, ...props }) => {
                     {result.loading ? (
                         <ActivityIndicator animating={true} icon="timer-sand" />
                     ) : (
-                        <Button onPress={onSendButtonClicked}>{t("components.pendingResultListItem.send")}</Button>
+                        <Button disabled={offline} onPress={onSendButtonClicked}>
+                            {t("components.pendingResultListItem.send")}
+                        </Button>
                     )}
                 </View>
             )}

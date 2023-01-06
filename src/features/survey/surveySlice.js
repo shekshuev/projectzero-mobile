@@ -28,7 +28,9 @@ export const surveySlice = createSlice({
             })
             .addCase(getAvailableSurveys.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error?.message || "Unknown error";
+                if (action?.error?.name !== "OfflineError") {
+                    state.error = action.error?.message || "Unknown error";
+                }
             });
     }
 });

@@ -74,6 +74,7 @@ export const resultSlice = createSlice({
                 state.lastUpdateAt = Date.now();
             })
             .addCase(sendResult.rejected, (state, action) => {
+                state.currentSendingId = null;
                 state.pendingResults = state.pendingResults.map(pr => {
                     if (pr.id === state.currentSendingId) {
                         return {
@@ -85,7 +86,6 @@ export const resultSlice = createSlice({
                         return pr;
                     }
                 });
-                state.currentSendingId = null;
                 state.error = action.error?.message || "Unknown error";
             })
             .addCase(getResults.pending, state => {
@@ -100,7 +100,9 @@ export const resultSlice = createSlice({
             })
             .addCase(getResults.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error?.message || "Unknown error";
+                if (action?.error?.name !== "OfflineError") {
+                    state.error = action.error?.message || "Unknown error";
+                }
             });
     }
 });

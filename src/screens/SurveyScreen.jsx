@@ -9,11 +9,11 @@ import { useEffect, useState, useMemo } from "react";
 const SurveyScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const surveys = useSelector(store => store.survey.surveys);
-    const error = useSelector(store => store.survey.error);
+    const surveys = useSelector(state => state.survey.surveys);
+    const error = useSelector(state => state.survey.error);
+    const surveyLoading = useSelector(state => state.survey.loading);
+    const locationLoading = useSelector(state => state.location.loading);
 
-    const surveyLoading = useSelector(store => store.survey.loading);
-    const locationLoading = useSelector(store => store.location.loading);
     const loading = useMemo(() => surveyLoading || locationLoading, [surveyLoading, locationLoading]);
 
     const [isSnackbarVisible, setSnackbarVisible] = useState(false);

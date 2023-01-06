@@ -27,6 +27,14 @@
             "settings": {
                 "title": "Settings"
             }
+        },
+        "loginRouter": {
+            "login": {
+                "title": "Login"
+            },
+            "settings": {
+                "title": "Settings"
+            }
         }
     },
     "screens": {
@@ -35,7 +43,8 @@
             "inputLabels": {
                 "login": "Username",
                 "password": "Password"
-            }
+            },
+            "useOffline": "I have no access to the Internet"
         },
         "locationDenied": {
             "placeholder": "App for some reason couldn't access your location. Fix it manually in phone settings and then reload app.",
