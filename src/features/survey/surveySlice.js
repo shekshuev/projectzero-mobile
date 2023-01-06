@@ -19,7 +19,6 @@ export const surveySlice = createSlice({
             .addCase(getAvailableSurveys.pending, state => {
                 state.loading = true;
                 state.error = null;
-                state.accessToken = null;
             })
             .addCase(getAvailableSurveys.fulfilled, (state, action) => {
                 state.surveys = action.payload?.data?.surveys || [];

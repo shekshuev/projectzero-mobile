@@ -1,6 +1,7 @@
 import { List, Button, Portal, Dialog, Text } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import PendingResultListItem from "@components/PendingResultListItem";
+import ResultListItem from "@components/ResultListItem";
 import { useSelector, useDispatch } from "react-redux";
 import { useMemo, useState } from "react";
 import moment from "moment";
@@ -19,6 +20,7 @@ const ResultList = ({ loading }) => {
             survey: surveys?.find(s => s.id === r.result.surveyId)
         }))
     );
+    const results = useSelector(state => state.result.results);
     const lastUpdatedAtFormatted = useMemo(
         () => t("components.resultList.lastUpdatedAt") + moment(lastUpdatedAt).format("DD.MM.YYYY HH:mm:ss"),
         [lastUpdatedAt]
@@ -56,15 +58,24 @@ const ResultList = ({ loading }) => {
 
     return (
         <>
+            {pendingResults?.length > 0 && (
+                <>
+                    <List.Section>
+                        {pendingResults?.map((result, i) => (
+                            <PendingResultListItem loading={loading} result={result} key={i} onSend={onSend} />
+                        ))}
+                    </List.Section>
+                    <View style={styles.buttonContainer}>
+                        <Button onPress={onClearQueueButtonClicked}>{t("components.resultList.clear")}</Button>
+                    </View>
+                </>
+            )}
             <List.Section>
                 <List.Subheader>{lastUpdatedAtFormatted}</List.Subheader>
-                {pendingResults?.map((result, i) => (
-                    <PendingResultListItem loading={loading} result={result} key={i} onSend={onSend} />
+                {results?.map((result, i) => (
+                    <ResultListItem loading={loading} result={result} key={i} />
                 ))}
             </List.Section>
-            <View style={styles.buttonContainer}>
-                <Button onPress={onClearQueueButtonClicked}>{t("components.resultList.clear")}</Button>
-            </View>
             <Portal>
                 <Dialog visible={isDialogOpen} onDismiss={closeDialog}>
                     <Dialog.Content>

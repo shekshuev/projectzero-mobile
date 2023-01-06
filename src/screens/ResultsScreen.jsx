@@ -1,19 +1,16 @@
 import { StyleSheet, ScrollView, View, RefreshControl } from "react-native";
 import ResultList from "@components/ResultList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Avatar, Text, Snackbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import { getResults } from "@features/results/resultApi";
 
-const ResultsScreen = ({ navigation }) => {
+const ResultsScreen = () => {
+    const dispatch = useDispatch();
     const { t } = useTranslation();
-    const surveys = useSelector(state => state.survey.surveys);
-    const pendingResults = useSelector(state =>
-        state.result.pendingResults?.map(r => ({
-            ...r,
-            survey: surveys?.find(s => s.id === r.result.surveyId)
-        }))
-    );
+    const pendingResults = useSelector(state => state.result.pendingResults);
+    const results = useSelector(state => state.result.results);
     const error = useSelector(state => state.result.error);
     const loading = useSelector(state => state.result.loading);
 
@@ -21,6 +18,7 @@ const ResultsScreen = ({ navigation }) => {
 
     const onRefresh = () => {
         setSnackbarVisible(false);
+        dispatch(getResults());
     };
 
     useEffect(() => {
@@ -35,7 +33,9 @@ const ResultsScreen = ({ navigation }) => {
                 <ScrollView
                     contentContainerStyle={styles.scrollView}
                     refreshControl={<RefreshControl refreshing={loading} onRefresh={() => onRefresh()} />}>
-                    {!loading & (pendingResults?.length === 0 || !pendingResults) ? (
+                    {!loading &&
+                    (pendingResults?.length === 0 || !pendingResults) &&
+                    (results?.length === 0 || !results) ? (
                         <View style={styles.empty}>
                             <Avatar.Icon size={100} icon="database" />
                             <Text style={styles.message} variant="headlineSmall">

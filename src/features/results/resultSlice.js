@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { sendResult } from "@features/results/resultApi";
+import { sendResult, getResults } from "@features/results/resultApi";
 import "react-native-get-random-values";
 import { v4 } from "uuid";
 
@@ -68,7 +68,7 @@ export const resultSlice = createSlice({
                         return pr;
                     }
                 });
-                state.results = [...state.results, action.payload];
+                state.results = [...state.results, action.payload.data];
                 state.currentSendingId = null;
                 state.error = null;
                 state.lastUpdateAt = Date.now();
@@ -86,6 +86,20 @@ export const resultSlice = createSlice({
                     }
                 });
                 state.currentSendingId = null;
+                state.error = action.error?.message || "Unknown error";
+            })
+            .addCase(getResults.pending, state => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getResults.fulfilled, (state, action) => {
+                state.results = action.payload?.data?.results || [];
+                state.loading = false;
+                state.error = null;
+                state.lastUpdateAt = Date.now();
+            })
+            .addCase(getResults.rejected, (state, action) => {
+                state.loading = false;
                 state.error = action.error?.message || "Unknown error";
             });
     }
