@@ -95,7 +95,21 @@
             "lastUpdatedAt": "Last updated at: "
         },
         "pendingResultListItem": {
-            "pending": "Pending"
+            "pending": "Pending",
+            "sending": "Sending",
+            "created": "Created",
+            "send": "Send",
+            "sent": "Sent",
+            "error": "Error"
+        },
+        "resultList": {
+            "lastUpdatedAt": "Last updated at: ",
+            "clear": "Clear queue",
+            "modal": {
+                "title": "This survey has been already sent. Do you still want to send it?",
+                "yes": "Yes",
+                "no": "No"
+            }
         }
     }
 }

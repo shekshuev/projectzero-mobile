@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useMemo, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { addResult } from "@features/results/resultSlice";
+import { addPendingResult } from "@features/results/resultSlice";
 
 const QuestionHeader = ({ question }) => {
     const { t } = useTranslation();
@@ -237,7 +237,7 @@ const ActiveSurvey = ({ route }) => {
 
     useEffect(() => {
         if (filled.surveyId && filled.completed) {
-            dispatch(addResult(filled));
+            dispatch(addPendingResult(filled));
         }
     }, [filled]);
 

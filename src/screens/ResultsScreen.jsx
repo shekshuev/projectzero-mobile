@@ -8,20 +8,16 @@ import { useEffect, useState } from "react";
 const ResultsScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const surveys = useSelector(state => state.survey.surveys);
-    const results = useSelector(state =>
-        state.result.results?.map(r => ({
+    const pendingResults = useSelector(state =>
+        state.result.pendingResults?.map(r => ({
             ...r,
-            survey: surveys?.find(s => s.id === r.surveyId)
+            survey: surveys?.find(s => s.id === r.result.surveyId)
         }))
     );
     const error = useSelector(state => state.result.error);
     const loading = useSelector(state => state.result.loading);
 
     const [isSnackbarVisible, setSnackbarVisible] = useState(false);
-
-    const onListItemClicked = surveyId => {
-        // navigation.navigate("surveyInfo", { id: surveyId });
-    };
 
     const onRefresh = () => {
         setSnackbarVisible(false);
@@ -39,7 +35,7 @@ const ResultsScreen = ({ navigation }) => {
                 <ScrollView
                     contentContainerStyle={styles.scrollView}
                     refreshControl={<RefreshControl refreshing={loading} onRefresh={() => onRefresh()} />}>
-                    {!loading & (results?.length === 0 || !results) ? (
+                    {!loading & (pendingResults?.length === 0 || !pendingResults) ? (
                         <View style={styles.empty}>
                             <Avatar.Icon size={100} icon="database" />
                             <Text style={styles.message} variant="headlineSmall">
@@ -50,7 +46,7 @@ const ResultsScreen = ({ navigation }) => {
                             </Text>
                         </View>
                     ) : (
-                        <ResultList onListItemClicked={onListItemClicked} loading={loading} results={results} />
+                        <ResultList loading={loading} />
                     )}
                 </ScrollView>
             </View>
