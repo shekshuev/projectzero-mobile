@@ -44,6 +44,8 @@ const RootRouter = () => {
     useEffect(() => {
         if (isOffline) {
             setSignedIn(true);
+        } else {
+            setSignedIn(false);
         }
     }, [isOffline]);
 
