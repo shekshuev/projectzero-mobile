@@ -1,4 +1,4 @@
-import { StyleSheet, LogBox } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import RootRouter from "@navigation/RootRouter";
@@ -11,11 +11,11 @@ import "@localization/i18n";
 import { MD3LightTheme, MD3DarkTheme } from "react-native-paper";
 
 export default function App() {
-    LogBox.ignoreLogs(["Warning: ...", "Looks like"]);
+    const scheme = useColorScheme();
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <PaperProvider theme={MD3DarkTheme}>
+                <PaperProvider theme={scheme === "dark" ? MD3DarkTheme : MD3LightTheme}>
                     <SafeAreaView style={styles.container}>
                         <RootRouter />
                     </SafeAreaView>
