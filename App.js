@@ -8,14 +8,14 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@store/store";
 import "react-native-url-polyfill/auto";
 import "@localization/i18n";
-import { MD3LightTheme } from "react-native-paper";
+import { MD3LightTheme, MD3DarkTheme } from "react-native-paper";
 
 export default function App() {
     LogBox.ignoreLogs(["Warning: ...", "Looks like"]);
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-                <PaperProvider theme={MD3LightTheme}>
+                <PaperProvider theme={MD3DarkTheme}>
                     <SafeAreaView style={styles.container}>
                         <RootRouter />
                     </SafeAreaView>
@@ -28,7 +28,6 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center"
     }

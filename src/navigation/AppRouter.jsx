@@ -1,53 +1,24 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { BottomNavigation } from "react-native-paper";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { useTranslation } from "react-i18next";
+import SurveyRouter from "@navigation/SurveyRouter";
+import ResultsRouter from "@navigation/ResultsRouter";
+import SettingsRouter from "@navigation/SettingsRouter";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import NetInfo from "@react-native-community/netinfo";
 import { AppState } from "react-native";
 import * as Location from "expo-location";
 import { getCurrentPosition } from "@features/location/locationApi";
 import { getAvailableSurveys } from "@features/survey/surveyApi";
-import SurveyRouter from "@navigation/SurveyRouter";
-import ResultsRouter from "@navigation/ResultsRouter";
-import SettingsRouter from "@navigation/SettingsRouter";
+
+const Tab = createMaterialBottomTabNavigator();
 
 const AppRouter = () => {
-    const { t, i18n } = useTranslation();
-
-    const [index, setIndex] = useState(0);
-    const routes = useMemo(
-        () => [
-            {
-                key: "survey",
-                title: t("navigation.appRouter.screenTitles.surveys"),
-                focusedIcon: "clipboard-list",
-                unfocusedIcon: "clipboard-list-outline"
-            },
-            {
-                key: "results",
-                title: t("navigation.appRouter.screenTitles.results"),
-                focusedIcon: "view-list",
-                unfocusedIcon: "view-list-outline"
-            },
-            {
-                key: "settings",
-                title: t("navigation.appRouter.screenTitles.settings"),
-                focusedIcon: "cog",
-                unfocusedIcon: "cog-outline"
-            }
-        ],
-        [() => i18n.language]
-    );
-
-    const renderScene = BottomNavigation.SceneMap({
-        survey: SurveyRouter,
-        settings: SettingsRouter,
-        results: ResultsRouter
-    });
-
+    const { t } = useTranslation();
     const dispatch = useDispatch();
-    const currentPosition = useSelector(state => state.location.position);
 
+    const currentPosition = useSelector(state => state.location.position);
     const [isGpsEnabled, setGpsEnabled] = useState(true);
     const [appState, setAppState] = useState(AppState.currentState);
 
@@ -79,7 +50,51 @@ const AppRouter = () => {
         }
     }, [currentPosition]);
 
-    return <BottomNavigation navigationState={{ index, routes }} onIndexChange={setIndex} renderScene={renderScene} />;
+    return (
+        <Tab.Navigator>
+            <Tab.Screen
+                name={t("navigation.appRouter.screenTitles.surveys")}
+                component={SurveyRouter}
+                options={{
+                    tabBarIcon: ({ color, focused }) => {
+                        return (
+                            <MaterialCommunityIcons
+                                name={focused ? "clipboard-list" : "clipboard-list-outline"}
+                                color={color}
+                                size={24}
+                            />
+                        );
+                    }
+                }}
+            />
+            <Tab.Screen
+                name={t("navigation.appRouter.screenTitles.results")}
+                component={ResultsRouter}
+                options={{
+                    tabBarIcon: ({ color, focused }) => {
+                        return (
+                            <MaterialCommunityIcons
+                                name={focused ? "view-list" : "view-list-outline"}
+                                color={color}
+                                size={24}
+                            />
+                        );
+                    }
+                }}
+            />
+            <Tab.Screen
+                name={t("navigation.appRouter.screenTitles.settings")}
+                component={SettingsRouter}
+                options={{
+                    tabBarIcon: ({ color, focused }) => {
+                        return (
+                            <MaterialCommunityIcons name={focused ? "cog" : "cog-outline"} color={color} size={24} />
+                        );
+                    }
+                }}
+            />
+        </Tab.Navigator>
+    );
 };
 
 export default AppRouter;

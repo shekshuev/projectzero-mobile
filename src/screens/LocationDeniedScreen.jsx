@@ -1,75 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Image, Dimensions, AppState } from "react-native";
-import { Button, Text, ActivityIndicator } from "react-native-paper";
+import { StyleSheet, View, Image, Dimensions } from "react-native";
+import { Button, Text } from "react-native-paper";
 import * as Linking from "expo-linking";
-import * as Location from "expo-location";
 import { useTranslation } from "react-i18next";
 
-const LocationDeniedScreen = props => {
-    const [appState, setAppState] = useState(AppState.currentState);
-    const [serviceEnabled, setServiceEnabled] = useState(false);
-    const [loading, setLoading] = useState(true);
-
+const LocationDeniedScreen = () => {
     const { t } = useTranslation();
-    useEffect(() => {
-        const servInterval = setInterval(async () => {
-            const serviceEnabled = await Location.hasServicesEnabledAsync();
-            if (serviceEnabled) {
-                setServiceEnabled(true);
-            }
-        }, 2000);
-        return () => clearInterval(servInterval);
-    }, []);
-
-    useEffect(() => {
-        Location.getForegroundPermissionsAsync().then(async res => {
-            if (res.granted === true && res.status === "granted") {
-                if (serviceEnabled) {
-                    props.setIsLocationGranted(true);
-                }
-                setLoading(false);
-            } else {
-                const result = await Location.requestForegroundPermissionsAsync();
-                if (result.granted === true && result.status === "granted") {
-                    if (serviceEnabled) {
-                        props.setIsLocationGranted(true);
-                    }
-                }
-                setLoading(false);
-            }
-        });
-    }, [appState, serviceEnabled]);
-
-    useEffect(() => {
-        const subscription = AppState.addEventListener("change", nextAppState => {
-            setAppState(nextAppState);
-        });
-        return () => subscription.remove();
-    }, []);
 
     return (
         <View style={styles.container}>
-            {loading ? (
-                <ActivityIndicator size="large" animating={true} />
-            ) : (
-                <>
-                    <Image
-                        style={styles.img}
-                        source={require("@assets/images/locationDenied.png")}
-                        resizeMode="contain"
-                    />
-                    <Text style={styles.text} variant="bodyMedium">
-                        {t("screens.locationDenied.placeholder")}
-                    </Text>
-                    <Button
-                        icon="cog"
-                        onPress={() => {
-                            Linking.openSettings();
-                        }}>
-                        {t("screens.locationDenied.button")}
-                    </Button>
-                </>
-            )}
+            <>
+                <Image style={styles.img} source={require("@assets/images/locationDenied.png")} resizeMode="contain" />
+                <Text style={styles.text} variant="bodyMedium">
+                    {t("screens.locationDenied.placeholder")}
+                </Text>
+                <Button
+                    icon="cog"
+                    onPress={() => {
+                        Linking.openSettings();
+                    }}>
+                    {t("screens.locationDenied.button")}
+                </Button>
+            </>
         </View>
     );
 };

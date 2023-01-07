@@ -18,7 +18,7 @@ export const authSlice = createSlice({
         },
         logout: state => {
             state.offline = false;
-            state.accessToken = false;
+            state.accessToken = null;
         }
     },
     extraReducers: builder => {
