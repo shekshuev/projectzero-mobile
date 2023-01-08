@@ -35,6 +35,11 @@
             "settings": {
                 "title": "Settings"
             }
+        },
+        "accountRouter": {
+            "account": {
+                "title": "Account"
+            }
         }
     },
     "screens": {

@@ -4,11 +4,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppRouter from "@navigation/AppRouter";
 import LocationDeniedScreen from "@screens/LocationDeniedScreen";
 import LoginRouter from "@navigation/LoginRouter";
+import AccountRouter from "@navigation/AccountRouter";
 import { useTheme } from "react-native-paper";
-import { ROOT_APP, ROOT_LOCATION_DENIED, ROOT_LOGIN } from "@navigation/routes";
+import { ROOT_APP, ROOT_LOCATION_DENIED, ROOT_LOGIN, ROOT_ACCOUNT } from "@navigation/routes";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { JwtError } from "@utils/errors";
 import { isTokenStillFresh } from "@utils/jwt";
 import * as Location from "expo-location";
 
@@ -32,9 +32,7 @@ const RootRouter = () => {
                     setSignedIn(true);
                 }
             } catch (e) {
-                if (e instanceof JwtError) {
-                    setSignedIn(false);
-                }
+                setSignedIn(false);
             }
         } else {
             setSignedIn(false);
@@ -98,15 +96,26 @@ const RootRouter = () => {
                             component={LoginRouter}
                         />
                     ) : isLocationEnabled ? (
-                        <Stack.Screen
-                            options={{
-                                statusBarStyle: theme.dark ? "light" : "dark",
-                                statusBarColor: theme.colors.background,
-                                headerShown: false
-                            }}
-                            name={ROOT_APP}
-                            component={AppRouter}
-                        />
+                        <>
+                            <Stack.Screen
+                                options={{
+                                    statusBarStyle: theme.dark ? "light" : "dark",
+                                    statusBarColor: theme.colors.background,
+                                    headerShown: false
+                                }}
+                                name={ROOT_APP}
+                                component={AppRouter}
+                            />
+                            <Stack.Screen
+                                options={{
+                                    statusBarStyle: theme.dark ? "light" : "dark",
+                                    statusBarColor: theme.colors.background,
+                                    headerShown: false
+                                }}
+                                name={ROOT_ACCOUNT}
+                                component={AccountRouter}
+                            />
+                        </>
                     ) : (
                         <Stack.Screen
                             options={{

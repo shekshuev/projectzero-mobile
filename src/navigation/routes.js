@@ -1,6 +1,7 @@
 export const ROOT_LOCATION_DENIED = "ROOT_LOCATION_DENIED";
 export const ROOT_APP = "ROOT_APP";
 export const ROOT_LOGIN = "ROOT_LOGIN";
+export const ROOT_ACCOUNT = "ROOT_ACCOUNT";
 export const APP_SURVEYS = "APP_SURVEYS";
 export const APP_RESULTS = "APP_RESULTS";
 export const APP_SETTINGS = "APP_SETTINGS";
