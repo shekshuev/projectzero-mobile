@@ -40,7 +40,7 @@ const PendingResultListItem = ({ result, loading, offline, onSend, onShare, ...p
                 </View>
             )}
             disabled={loading}
-            title={result.survey.title}
+            title={result?.survey?.title}
             description={
                 <View style={styles.right}>
                     <Text>{`${t("components.pendingResultListItem.created")}: ${moment(result.createdAt).format(
