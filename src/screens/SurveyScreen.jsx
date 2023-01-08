@@ -6,6 +6,7 @@ import { Avatar, Text, Snackbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState, useMemo } from "react";
 import { SURVEYS_INFO } from "@navigation/routes";
+import { FILE_FORMAT_ERROR } from "@utils/errors";
 
 const SurveyScreen = ({ navigation }) => {
     const { t } = useTranslation();
@@ -17,10 +18,11 @@ const SurveyScreen = ({ navigation }) => {
 
     const loading = useMemo(() => surveyLoading || locationLoading, [surveyLoading, locationLoading]);
 
-    const [isSnackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarError, setSnackbarError] = useState();
+    const isSnackbarVisible = useMemo(() => snackbarError?.length > 0, [snackbarError]);
 
     const onRefresh = () => {
-        setSnackbarVisible(false);
+        setSnackbarError(null);
         dispatch(getAvailableSurveys());
     };
 
@@ -29,8 +31,12 @@ const SurveyScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-        if (error?.length > 0) {
-            setSnackbarVisible(true);
+        if (error && error?.length > 0) {
+            if (error === FILE_FORMAT_ERROR) {
+                setSnackbarError(t("errors.fileFormatError"));
+            } else {
+                setSnackbarError(error);
+            }
         }
     }, [error]);
 
@@ -55,8 +61,8 @@ const SurveyScreen = ({ navigation }) => {
                     )}
                 </ScrollView>
             </View>
-            <Snackbar visible={isSnackbarVisible} onDismiss={() => setSnackbarVisible(false)} duration={4000}>
-                {error}
+            <Snackbar visible={isSnackbarVisible} onDismiss={() => setSnackbarError(null)} duration={4000}>
+                {snackbarError}
             </Snackbar>
         </>
     );

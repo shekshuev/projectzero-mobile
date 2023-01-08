@@ -16,7 +16,7 @@ const SurveyRouter = () => {
     return (
         <Stack.Navigator
             screenOptions={{
-                header: props => <AppBar {...props} />
+                header: props => <AppBar hasImportButton {...props} />
             }}>
             <Stack.Screen
                 options={{

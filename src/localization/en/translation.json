@@ -144,5 +144,8 @@
                 "no": "No"
             }
         }
+    },
+    "errors": {
+        "fileFormatError": "Wrong file format!"
     }
 }

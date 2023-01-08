@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-        if (error?.length > 0) {
+        if (error && error?.length > 0) {
             setSnackbarVisible(true);
         }
     }, [error]);
