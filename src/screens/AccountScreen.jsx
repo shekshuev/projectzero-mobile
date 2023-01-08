@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { logout } from "@features/auth/authSlice";
 import { getAccountInfo } from "@features/account/accountApi";
 
-const AccountScreen = () => {
+const AccountScreen = ({ navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const account = useSelector(state => state.account.account);
@@ -48,6 +48,7 @@ const AccountScreen = () => {
     };
 
     useEffect(() => {
+        navigation.setOptions({ title: account?.userName });
         if (!loading) {
             dispatch(getAccountInfo());
         }

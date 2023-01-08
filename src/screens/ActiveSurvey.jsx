@@ -86,7 +86,7 @@ const Open = ({ question, onAnswerSelected }) => {
     );
 };
 
-const ActiveSurvey = ({ route }) => {
+const ActiveSurvey = ({ route, navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const { id } = route.params;
@@ -240,6 +240,10 @@ const ActiveSurvey = ({ route }) => {
             dispatch(addPendingResult(filled));
         }
     }, [filled]);
+
+    useEffect(() => {
+        navigation.setOptions({ title: t("screens.activeSurvey.surveyWithId", { id }) });
+    }, []);
 
     return (
         <>

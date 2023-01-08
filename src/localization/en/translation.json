@@ -97,7 +97,8 @@
             "description": "Description",
             "form": "Form",
             "questionsCount": "Questions count",
-            "startSurvey": "Start survey"
+            "startSurvey": "Start survey",
+            "surveyWithId": "Survey {{id}}"
         },
         "results": {
             "noResults": "You haven't any finished surveys yet",
@@ -107,7 +108,8 @@
             "required": "Required",
             "submit": "Submit",
             "finish": "Finish",
-            "success": "Survey successfully finished"
+            "success": "Survey successfully finished",
+            "surveyWithId": "Survey {{id}}"
         },
         "account": {
             "noName": "No name",

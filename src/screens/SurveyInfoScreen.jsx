@@ -1,6 +1,6 @@
 import { List, Button, Text } from "react-native-paper";
 import { useSelector } from "react-redux";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { ScrollView, StyleSheet } from "react-native";
@@ -15,6 +15,10 @@ const SurveyInfoScreen = ({ route, navigation }) => {
     const onStartSurveyButtonClicked = () => {
         navigation.navigate(SURVEYS_ACTIVE, { id });
     };
+
+    useEffect(() => {
+        navigation.setOptions({ title: t("screens.surveyInfo.surveyWithId", { id }) });
+    }, []);
 
     return (
         <ScrollView>
