@@ -35,10 +35,7 @@ const RootRouter = () => {
 
     useEffect(() => {
         const servInterval = setInterval(async () => {
-            const serviceEnabled = await Location.hasServicesEnabledAsync();
-            if (serviceEnabled) {
-                setServiceEnabled(true);
-            }
+            setServiceEnabled(await Location.hasServicesEnabledAsync());
         }, 2000);
         return () => clearInterval(servInterval);
     }, []);
@@ -46,15 +43,11 @@ const RootRouter = () => {
     useEffect(() => {
         Location.getForegroundPermissionsAsync().then(async res => {
             if (res.granted === true && res.status === "granted") {
-                if (serviceEnabled) {
-                    setIsLocationEnabled(true);
-                }
+                setIsLocationEnabled(serviceEnabled);
             } else {
                 const result = await Location.requestForegroundPermissionsAsync();
                 if (result.granted === true && result.status === "granted") {
-                    if (serviceEnabled) {
-                        setIsLocationEnabled(true);
-                    }
+                    setIsLocationEnabled(serviceEnabled);
                 }
             }
         });
@@ -81,7 +74,7 @@ const RootRouter = () => {
                             name={ROOT_LOGIN}
                             component={LoginRouter}
                         />
-                    ) : isLocationEnabled ? (
+                    ) : isLocationEnabled && serviceEnabled ? (
                         <>
                             <Stack.Screen
                                 options={{

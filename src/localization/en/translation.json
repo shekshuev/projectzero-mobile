@@ -52,7 +52,7 @@
             "useOffline": "I have no access to the Internet"
         },
         "locationDenied": {
-            "placeholder": "App for some reason couldn't access your location. Fix it manually in phone settings and then reload app.",
+            "placeholder": "No access to device location service.\nPlease, check is location service is enabled or are relevant permissions granted to the app.",
             "button": "Open settings"
         },
         "settings": {

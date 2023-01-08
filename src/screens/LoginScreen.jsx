@@ -16,8 +16,8 @@ const LoginScreen = ({ navigation }) => {
     const error = useSelector(state => state.auth.error);
     const loading = useSelector(state => state.auth.loading);
 
-    const [userName, setUserName] = useState("interviewer");
-    const [password, setPassword] = useState("interviewer");
+    const [userName, setUserName] = useState();
+    const [password, setPassword] = useState();
     const [isPasswordVisible, setPasswordVisible] = useState(false);
     const [isSnackbarVisible, setSnackbarVisible] = useState(false);
 
