@@ -10,3 +10,6 @@ export const SURVEYS_INFO = "SURVEYS_INFO";
 export const SURVEYS_ACTIVE = "SURVEYS_ACTIVE";
 export const LOGIN_SETTINGS = "LOGIN_SETTINGS";
 export const LOGIN_MAIN = "LOGIN_MAIN";
+export const SETTINGS_MAIN = "SETTINGS_MAIN";
+export const RESULTS_LIST = "RESULTS_LIST";
+export const ACCOUNT_MAIN = "ACCOUNT_MAIN";

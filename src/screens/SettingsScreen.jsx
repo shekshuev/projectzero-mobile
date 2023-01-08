@@ -11,9 +11,9 @@ import { clear as clearSettings } from "@features/settings/settingsSlice";
 import { clear as clearAccount } from "@features/account/accountSlice";
 import { clear as clearAuth } from "@features/auth/authSlice";
 import { setApiAddress } from "@features/settings/settingsSlice";
-import { ROOT_LOGIN } from "@navigation/routes";
+import { LOGIN_MAIN, LOGIN_SETTINGS } from "@navigation/routes";
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = ({ navigation, route }) => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
 
@@ -51,7 +51,9 @@ const SettingsScreen = ({ navigation }) => {
         dispatch(clearSettings());
         dispatch(clearAccount());
         dispatch(clearAuth());
-        navigation.replace(ROOT_LOGIN);
+        if (route.name === LOGIN_SETTINGS) {
+            navigation.replace(LOGIN_MAIN);
+        }
     };
 
     const onSetApiAddressButtonClicked = () => {

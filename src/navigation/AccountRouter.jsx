@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import AccountScreen from "@screens/AccountScreen";
 import { useTheme } from "react-native-paper";
 import AppBar from "@components/AppBar";
+import { ACCOUNT_MAIN } from "@navigation/routes";
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ const AccountRouter = () => {
                     statusBarStyle: theme.dark ? "light" : "dark",
                     statusBarColor: theme.colors.elevation.level2
                 }}
-                name="results"
+                name={ACCOUNT_MAIN}
                 component={AccountScreen}
             />
         </Stack.Navigator>
