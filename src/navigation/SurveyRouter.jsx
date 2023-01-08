@@ -5,6 +5,7 @@ import ActiveSurvey from "@screens/ActiveSurvey";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
 import { SURVEYS_ACTIVE, SURVEYS_INFO, SURVEYS_LIST } from "@navigation/routes";
+import AppBar from "@components/AppBar";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,16 +14,15 @@ const SurveyRouter = () => {
     const theme = useTheme();
 
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                header: props => <AppBar {...props} />
+            }}>
             <Stack.Screen
                 options={{
                     title: t("navigation.surveyRouter.surveys.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.background,
-                    headerStyle: {
-                        backgroundColor: theme.colors.background
-                    },
-                    headerTintColor: theme.colors.onBackground
+                    statusBarColor: theme.colors.elevation.level2
                 }}
                 name={SURVEYS_LIST}
                 component={SurveyScreen}
@@ -31,11 +31,7 @@ const SurveyRouter = () => {
                 options={{
                     title: t("navigation.surveyRouter.surveyInfo.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.background,
-                    headerStyle: {
-                        backgroundColor: theme.colors.background
-                    },
-                    headerTintColor: theme.colors.onBackground
+                    statusBarColor: theme.colors.elevation.level2
                 }}
                 name={SURVEYS_INFO}
                 component={SurveyInfoScreen}
@@ -44,11 +40,7 @@ const SurveyRouter = () => {
                 options={{
                     title: t("navigation.surveyRouter.activeSurvey.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.background,
-                    headerStyle: {
-                        backgroundColor: theme.colors.background
-                    },
-                    headerTintColor: theme.colors.onBackground
+                    statusBarColor: theme.colors.elevation.level2
                 }}
                 name={SURVEYS_ACTIVE}
                 component={ActiveSurvey}

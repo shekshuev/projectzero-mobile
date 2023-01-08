@@ -4,6 +4,7 @@ import LoginScreen from "@screens/LoginScreen";
 import SettingsScreen from "@screens/SettingsScreen";
 import { useTheme } from "react-native-paper";
 import { LOGIN_MAIN, LOGIN_SETTINGS } from "@navigation/routes";
+import AppBar from "@components/AppBar";
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +13,10 @@ const LoginRouter = () => {
     const theme = useTheme();
 
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                header: props => <AppBar backgroundColor={theme.colors.background} {...props} />
+            }}>
             <Stack.Screen
                 options={{
                     title: t("navigation.loginRouter.login.title"),
@@ -27,11 +31,7 @@ const LoginRouter = () => {
                 options={{
                     title: t("navigation.loginRouter.settings.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.background,
-                    headerStyle: {
-                        backgroundColor: theme.colors.background
-                    },
-                    headerTintColor: theme.colors.onBackground
+                    statusBarColor: theme.colors.background
                 }}
                 name={LOGIN_SETTINGS}
                 component={SettingsScreen}
