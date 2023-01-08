@@ -3,10 +3,15 @@ import { List, ActivityIndicator, Button, Text } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
 import moment from "moment";
 import { useTheme } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const PendingResultListItem = ({ result, loading, offline, onSend, ...props }) => {
+const PendingResultListItem = ({ result, loading, offline, onSend, onShare, ...props }) => {
     const { t } = useTranslation();
     const theme = useTheme();
+
+    const onShareButtonClicked = () => {
+        onShare?.call?.(this, result);
+    };
 
     const onSendButtonClicked = () => {
         onSend?.call?.(this, result);
@@ -19,9 +24,18 @@ const PendingResultListItem = ({ result, loading, offline, onSend, ...props }) =
                     {result.loading ? (
                         <ActivityIndicator animating={true} />
                     ) : (
-                        <Button disabled={offline} onPress={onSendButtonClicked}>
-                            {t("components.pendingResultListItem.send")}
-                        </Button>
+                        <View style={styles.actions}>
+                            <Button style={styles.downloadButton} onPress={onShareButtonClicked}>
+                                <MaterialCommunityIcons name="share" size={20} color={theme.colors.primary} />
+                            </Button>
+                            <Button disabled={offline} onPress={onSendButtonClicked}>
+                                <MaterialCommunityIcons
+                                    name="send"
+                                    size={20}
+                                    color={offline ? theme.colors.disabled : theme.colors.primary}
+                                />
+                            </Button>
+                        </View>
                     )}
                 </View>
             )}
@@ -57,6 +71,12 @@ const PendingResultListItem = ({ result, loading, offline, onSend, ...props }) =
 const styles = StyleSheet.create({
     right: {
         justifyContent: "center"
+    },
+    actions: {
+        flexDirection: "row"
+    },
+    downloadButton: {
+        marginRight: 4
     }
 });
 

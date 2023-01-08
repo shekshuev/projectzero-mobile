@@ -1,5 +1,5 @@
 import { List, Button, Portal, Dialog, Text } from "react-native-paper";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Share } from "react-native";
 import PendingResultListItem from "@components/PendingResultListItem";
 import ResultListItem from "@components/ResultListItem";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,6 +8,8 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { setPendingResults } from "@features/results/resultSlice";
 import { sendResult } from "@features/results/resultApi";
+import * as Sharing from "expo-sharing";
+import * as FileSystem from "expo-file-system";
 
 const ResultList = ({ loading }) => {
     const dispatch = useDispatch();
@@ -51,6 +53,17 @@ const ResultList = ({ loading }) => {
         }
     };
 
+    const onShare = async result => {
+        if (await Sharing.isAvailableAsync()) {
+            const fileUri = `${FileSystem.documentDirectory}${result.id}.json`;
+            await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(result), {
+                encoding: FileSystem.EncodingType.UTF8
+            });
+            await Sharing.shareAsync(fileUri);
+            await FileSystem.deleteAsync(fileUri);
+        }
+    };
+
     const sendAgain = () => {
         dispatch(sendResult(result));
         setResult(null);
@@ -69,6 +82,7 @@ const ResultList = ({ loading }) => {
                                 result={result}
                                 key={i}
                                 onSend={onSend}
+                                onShare={onShare}
                             />
                         ))}
                     </List.Section>
