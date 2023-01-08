@@ -12,9 +12,15 @@ export const authSlice = createSlice({
     reducers: {
         setAccessToken: (state, action) => {
             state.accessToken = action.payload;
+            if (action.payload) {
+                state.offline = false;
+            }
         },
         setOffline: (state, action) => {
             state.offline = action.payload;
+            if (action.payload) {
+                state.accessToken = null;
+            }
         },
         logout: state => {
             state.offline = false;

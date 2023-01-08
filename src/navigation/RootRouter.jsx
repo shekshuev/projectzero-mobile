@@ -25,15 +25,13 @@ const RootRouter = () => {
     const [appState, setAppState] = useState(AppState.currentState);
     const [serviceEnabled, setServiceEnabled] = useState(false);
 
-    useEffect(() => setSignedIn(isTokenStillFresh(accessToken)), [accessToken]);
-
     useEffect(() => {
-        if (isOffline) {
-            setSignedIn(true);
+        if (accessToken) {
+            setSignedIn(isTokenStillFresh(accessToken));
         } else {
-            setSignedIn(false);
+            setSignedIn(isOffline);
         }
-    }, [isOffline]);
+    }, [accessToken, isOffline]);
 
     useEffect(() => {
         const servInterval = setInterval(async () => {
