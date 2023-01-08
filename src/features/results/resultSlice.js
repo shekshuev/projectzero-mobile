@@ -36,6 +36,14 @@ export const resultSlice = createSlice({
                     id: v4()
                 }
             ];
+        },
+        clear: state => {
+            state.pendingResults = [];
+            state.results = [];
+            state.loading = false;
+            state.error = false;
+            state.lastUpdatedAt = Date.now();
+            state.currentSendingId = null;
         }
     },
     extraReducers: builder => {
@@ -107,5 +115,5 @@ export const resultSlice = createSlice({
     }
 });
 
-export const { setResults, addResult, setPendingResults, addPendingResult } = resultSlice.actions;
+export const { setResults, addResult, setPendingResults, addPendingResult, clear } = resultSlice.actions;
 export default resultSlice.reducer;

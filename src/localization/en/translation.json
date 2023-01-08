@@ -66,14 +66,18 @@
                 "header": "Common",
                 "language": "Language"
             },
-            "exit": "Logout",
             "about": {
                 "header": "About app",
                 "name": "Name",
-                "author": "Author",
-                "email": "Email",
                 "version": "Version"
-            }
+            },
+            "clearModal": {
+                "title": "Do you really want to clear all application data?",
+                "yes": "Yes",
+                "cancel": "Cancel"
+            },
+            "exit": "Logout",
+            "clear": "Clear all data"
         },
         "survey": {
             "noSurveys": "No surveys for your location",

@@ -11,6 +11,11 @@ export const locationSlice = createSlice({
     reducers: {
         setCurrentPosition: (state, action) => {
             state.position = action.payload;
+        },
+        clear: state => {
+            state.position = null;
+            state.loading = false;
+            state.error = null;
         }
     },
     extraReducers: builder => {
@@ -32,5 +37,5 @@ export const locationSlice = createSlice({
     }
 });
 
-export const { setCurrentPosition } = locationSlice.actions;
+export const { setCurrentPosition, clear } = locationSlice.actions;
 export default locationSlice.reducer;

@@ -1,15 +1,21 @@
 import React, { useMemo, useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { useDispatch } from "react-redux";
-import { Button, Portal, Dialog, Text, RadioButton, List } from "react-native-paper";
+import { Button, Portal, Dialog, Text, RadioButton, List, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { logout } from "@features/auth/authSlice";
+import * as Application from "expo-application";
+import { clear as clearLocation } from "@features/location/locationSlice";
+import { clear as clearSurvey } from "@features/survey/surveySlice";
+import { clear as clearResult } from "@features/results/resultSlice";
 
 const SettingsScreen = () => {
     const { t, i18n } = useTranslation();
+    const theme = useTheme();
 
     const [isExitModalVisible, setExitModalVisible] = useState(false);
     const [isLanguageModalVisible, setLanguageModalVisible] = useState(false);
+    const [isClearModalVisible, setClearModalVisible] = useState(false);
     const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
     const dispatch = useDispatch();
 
@@ -18,6 +24,9 @@ const SettingsScreen = () => {
 
     const openLanguageDialog = () => setLanguageModalVisible(true);
     const closeLanguageDialog = () => setLanguageModalVisible(false);
+
+    const openClearDialog = () => setClearModalVisible(true);
+    const closeClearDialog = () => setClearModalVisible(false);
 
     const onLogoutButtonClicked = () => {
         dispatch(logout());
@@ -29,6 +38,13 @@ const SettingsScreen = () => {
         closeLanguageDialog();
     };
 
+    const onClearButtonClicked = () => {
+        dispatch(clearLocation());
+        dispatch(clearResult());
+        dispatch(clearSurvey());
+        dispatch(logout());
+    };
+
     const languages = useMemo(
         () => ({
             ru: t("screens.settings.languageModal.ru"),
@@ -36,13 +52,6 @@ const SettingsScreen = () => {
         }),
         [() => i18n.language]
     );
-
-    const appInfo = {
-        name: "Project Zero Mobile",
-        version: "0.1",
-        author: "Sergei Shekshuev",
-        email: "sergei.shekshuev@gmail.com"
-    };
 
     return (
         <ScrollView>
@@ -56,14 +65,31 @@ const SettingsScreen = () => {
             </List.Section>
             <List.Section>
                 <List.Subheader>{t("screens.settings.about.header")}</List.Subheader>
-                <List.Item title={t("screens.settings.about.name")} description={appInfo.name} />
-                <List.Item title={t("screens.settings.about.version")} description={appInfo.version} />
-                <List.Item title={t("screens.settings.about.author")} description={appInfo.author} />
-                <List.Item title={t("screens.settings.about.email")} description={appInfo.email} />
+                <List.Item title={t("screens.settings.about.name")} description={Application.applicationName} />
+                <List.Item
+                    title={t("screens.settings.about.version")}
+                    description={Application.nativeApplicationVersion}
+                />
             </List.Section>
             <View style={styles.container}>
                 <Button onPress={openExitDialog}>{t("screens.settings.exit")}</Button>
+                <Button textColor={theme.colors.error} onPress={openClearDialog}>
+                    {t("screens.settings.clear")}
+                </Button>
             </View>
+            <Portal>
+                <Dialog visible={isClearModalVisible} onDismiss={closeClearDialog}>
+                    <Dialog.Content>
+                        <Text variant="bodyLarge">{t("screens.settings.clearModal.title")}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button textColor={theme.colors.error} onPress={onClearButtonClicked}>
+                            {t("screens.settings.clearModal.yes")}
+                        </Button>
+                        <Button onPress={closeClearDialog}>{t("screens.settings.clearModal.cancel")}</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
             <Portal>
                 <Dialog visible={isExitModalVisible} onDismiss={closeExitDialog}>
                     <Dialog.Content>

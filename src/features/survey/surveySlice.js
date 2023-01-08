@@ -4,7 +4,7 @@ import { getAvailableSurveys } from "@features/survey/surveyApi";
 export const surveySlice = createSlice({
     name: "survey",
     initialState: {
-        surveys: null,
+        surveys: [],
         loading: false,
         error: null,
         lastUpdatedAt: Date.now()
@@ -12,6 +12,12 @@ export const surveySlice = createSlice({
     reducers: {
         setSurveys: (state, action) => {
             state.surveys = action.payload;
+        },
+        clear: state => {
+            state.surveys = [];
+            state.loading = false;
+            state.error = null;
+            state.lastUpdatedAt = Date.now();
         }
     },
     extraReducers: builder => {
@@ -35,5 +41,5 @@ export const surveySlice = createSlice({
     }
 });
 
-export const { setSurveys } = surveySlice.actions;
+export const { setSurveys, clear } = surveySlice.actions;
 export default surveySlice.reducer;
