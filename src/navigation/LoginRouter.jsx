@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import LoginScreen from "@screens/LoginScreen";
 import SettingsScreen from "@screens/SettingsScreen";
 import { useTheme } from "react-native-paper";
+import { LOGIN_MAIN, LOGIN_SETTINGS } from "@navigation/routes";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,7 @@ const LoginRouter = () => {
                     statusBarColor: theme.colors.background,
                     headerShown: false
                 }}
-                name="login"
+                name={LOGIN_MAIN}
                 component={LoginScreen}
             />
             <Stack.Screen
@@ -32,7 +33,7 @@ const LoginRouter = () => {
                     },
                     headerTintColor: theme.colors.onBackground
                 }}
-                name="settings"
+                name={LOGIN_SETTINGS}
                 component={SettingsScreen}
             />
         </Stack.Navigator>

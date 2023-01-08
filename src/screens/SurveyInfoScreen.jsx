@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { ScrollView, StyleSheet } from "react-native";
+import { SURVEYS_ACTIVE } from "@navigation/routes";
 
 const SurveyInfoScreen = ({ route, navigation }) => {
     const { t } = useTranslation();
@@ -12,7 +13,7 @@ const SurveyInfoScreen = ({ route, navigation }) => {
     const survey = useMemo(() => surveys?.find(s => s.id === id), [id]);
 
     const onStartSurveyButtonClicked = () => {
-        navigation.navigate("activeSurvey", { id });
+        navigation.navigate(SURVEYS_ACTIVE, { id });
     };
 
     return (

@@ -4,6 +4,7 @@ import SurveyInfoScreen from "@screens/SurveyInfoScreen";
 import ActiveSurvey from "@screens/ActiveSurvey";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
+import { SURVEYS_ACTIVE, SURVEYS_INFO, SURVEYS_LIST } from "@navigation/routes";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ const SurveyRouter = () => {
                     },
                     headerTintColor: theme.colors.onBackground
                 }}
-                name="surveys"
+                name={SURVEYS_LIST}
                 component={SurveyScreen}
             />
             <Stack.Screen
@@ -36,7 +37,7 @@ const SurveyRouter = () => {
                     },
                     headerTintColor: theme.colors.onBackground
                 }}
-                name="surveyInfo"
+                name={SURVEYS_INFO}
                 component={SurveyInfoScreen}
             />
             <Stack.Screen
@@ -49,7 +50,7 @@ const SurveyRouter = () => {
                     },
                     headerTintColor: theme.colors.onBackground
                 }}
-                name="activeSurvey"
+                name={SURVEYS_ACTIVE}
                 component={ActiveSurvey}
             />
         </Stack.Navigator>

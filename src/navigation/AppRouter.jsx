@@ -11,6 +11,7 @@ import { AppState } from "react-native";
 import * as Location from "expo-location";
 import { getCurrentPosition } from "@features/location/locationApi";
 import { getAvailableSurveys } from "@features/survey/surveyApi";
+import { APP_SURVEYS, APP_SETTINGS, APP_RESULTS } from "@navigation/routes";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -53,7 +54,7 @@ const AppRouter = () => {
     return (
         <Tab.Navigator>
             <Tab.Screen
-                name={t("navigation.appRouter.screenTitles.surveys")}
+                name={APP_SURVEYS}
                 component={SurveyRouter}
                 options={{
                     tabBarIcon: ({ color, focused }) => {
@@ -64,11 +65,12 @@ const AppRouter = () => {
                                 size={24}
                             />
                         );
-                    }
+                    },
+                    tabBarLabel: t("navigation.appRouter.screenTitles.surveys")
                 }}
             />
             <Tab.Screen
-                name={t("navigation.appRouter.screenTitles.results")}
+                name={APP_RESULTS}
                 component={ResultsRouter}
                 options={{
                     tabBarIcon: ({ color, focused }) => {
@@ -79,18 +81,20 @@ const AppRouter = () => {
                                 size={24}
                             />
                         );
-                    }
+                    },
+                    tabBarLabel: t("navigation.appRouter.screenTitles.results")
                 }}
             />
             <Tab.Screen
-                name={t("navigation.appRouter.screenTitles.settings")}
+                name={APP_SETTINGS}
                 component={SettingsRouter}
                 options={{
                     tabBarIcon: ({ color, focused }) => {
                         return (
                             <MaterialCommunityIcons name={focused ? "cog" : "cog-outline"} color={color} size={24} />
                         );
-                    }
+                    },
+                    tabBarLabel: t("navigation.appRouter.screenTitles.settings")
                 }}
             />
         </Tab.Navigator>

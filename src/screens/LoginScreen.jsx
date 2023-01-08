@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { signIn } from "@features/auth/authApi";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { setOffline } from "@features/auth/authSlice";
+import { LOGIN_SETTINGS } from "@navigation/routes";
 
 const LoginScreen = ({ navigation }) => {
     const { t } = useTranslation();
@@ -31,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     }, [error]);
 
     const goToSettings = () => {
-        navigation.navigate("settings");
+        navigation.navigate(LOGIN_SETTINGS);
     };
 
     const useOffline = () => {

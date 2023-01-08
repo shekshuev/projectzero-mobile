@@ -5,6 +5,7 @@ import { getAvailableSurveys } from "@features/survey/surveyApi";
 import { Avatar, Text, Snackbar } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState, useMemo } from "react";
+import { SURVEYS_INFO } from "@navigation/routes";
 
 const SurveyScreen = ({ navigation }) => {
     const { t } = useTranslation();
@@ -24,7 +25,7 @@ const SurveyScreen = ({ navigation }) => {
     };
 
     const onListItemClicked = surveyId => {
-        navigation.navigate("surveyInfo", { id: surveyId });
+        navigation.navigate(SURVEYS_INFO, { id: surveyId });
     };
 
     useEffect(() => {
