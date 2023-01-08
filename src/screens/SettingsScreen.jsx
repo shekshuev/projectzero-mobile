@@ -3,30 +3,28 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Portal, Dialog, Text, RadioButton, List, useTheme, TextInput } from "react-native-paper";
 import { useTranslation } from "react-i18next";
-import { logout } from "@features/auth/authSlice";
 import * as Application from "expo-application";
 import { clear as clearLocation } from "@features/location/locationSlice";
 import { clear as clearSurvey } from "@features/survey/surveySlice";
 import { clear as clearResult } from "@features/results/resultSlice";
 import { clear as clearSettings } from "@features/settings/settingsSlice";
+import { clear as clearAccount } from "@features/account/accountSlice";
+import { clear as clearAuth } from "@features/auth/authSlice";
 import { setApiAddress } from "@features/settings/settingsSlice";
+import { ROOT_LOGIN } from "@navigation/routes";
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
 
     const apiAddress = useSelector(state => state.settings.apiAddress);
 
-    const [isExitModalVisible, setExitModalVisible] = useState(false);
     const [isLanguageModalVisible, setLanguageModalVisible] = useState(false);
     const [isClearModalVisible, setClearModalVisible] = useState(false);
     const [isApiAddressModalVisible, setApiAddressModalVisible] = useState(false);
     const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
     const [tmpApiAddress, setTmpApiAddress] = useState();
     const dispatch = useDispatch();
-
-    const openExitDialog = () => setExitModalVisible(true);
-    const closeExitDialog = () => setExitModalVisible(false);
 
     const openLanguageDialog = () => setLanguageModalVisible(true);
     const closeLanguageDialog = () => setLanguageModalVisible(false);
@@ -40,10 +38,6 @@ const SettingsScreen = () => {
     };
     const closeApiAddressDialog = () => setApiAddressModalVisible(false);
 
-    const onLogoutButtonClicked = () => {
-        dispatch(logout());
-    };
-
     const onLanguageSelected = value => {
         i18n.changeLanguage(value);
         setCurrentLanguage(value);
@@ -55,7 +49,9 @@ const SettingsScreen = () => {
         dispatch(clearResult());
         dispatch(clearSurvey());
         dispatch(clearSettings());
-        dispatch(logout());
+        dispatch(clearAccount());
+        dispatch(clearAuth());
+        navigation.replace(ROOT_LOGIN);
     };
 
     const onSetApiAddressButtonClicked = () => {
@@ -95,7 +91,6 @@ const SettingsScreen = () => {
                 />
             </List.Section>
             <View style={styles.container}>
-                <Button onPress={openExitDialog}>{t("screens.settings.exit")}</Button>
                 <Button textColor={theme.colors.error} onPress={openClearDialog}>
                     {t("screens.settings.clear")}
                 </Button>
@@ -130,17 +125,6 @@ const SettingsScreen = () => {
                             {t("screens.settings.clearModal.yes")}
                         </Button>
                         <Button onPress={closeClearDialog}>{t("screens.settings.clearModal.cancel")}</Button>
-                    </Dialog.Actions>
-                </Dialog>
-            </Portal>
-            <Portal>
-                <Dialog visible={isExitModalVisible} onDismiss={closeExitDialog}>
-                    <Dialog.Content>
-                        <Text variant="bodyLarge">{t("screens.settings.exitModal.title")}</Text>
-                    </Dialog.Content>
-                    <Dialog.Actions>
-                        <Button onPress={onLogoutButtonClicked}>{t("screens.settings.exitModal.yes")}</Button>
-                        <Button onPress={closeExitDialog}>{t("screens.settings.exitModal.no")}</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>

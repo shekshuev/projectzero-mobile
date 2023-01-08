@@ -4,6 +4,7 @@ import locationReducer from "@features/location/locationSlice";
 import surveyReducer from "@features/survey/surveySlice";
 import resultReducer from "@features/results/resultSlice";
 import settingsReducer from "@features/settings/settingsSlice";
+import accountReducer from "@features/account/accountSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -39,13 +40,22 @@ const persistedSettingsReducer = persistReducer(
     settingsReducer
 );
 
+const persistedAccountReducer = persistReducer(
+    {
+        key: "account",
+        storage: AsyncStorage
+    },
+    accountReducer
+);
+
 export const store = configureStore({
     reducer: {
         auth: persistedAuthReducer,
         location: locationReducer,
         survey: persistedSurveyReducer,
         result: persistedResultReducer,
-        settings: persistedSettingsReducer
+        settings: persistedSettingsReducer,
+        account: accountReducer
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({

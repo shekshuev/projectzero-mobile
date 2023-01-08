@@ -17,7 +17,7 @@ const PendingResultListItem = ({ result, loading, offline, onSend, ...props }) =
             right={props => (
                 <View {...props} style={styles.right}>
                     {result.loading ? (
-                        <ActivityIndicator animating={true} icon="timer-sand" />
+                        <ActivityIndicator animating={true} />
                     ) : (
                         <Button disabled={offline} onPress={onSendButtonClicked}>
                             {t("components.pendingResultListItem.send")}

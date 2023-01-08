@@ -12,6 +12,7 @@ import * as Location from "expo-location";
 import { getCurrentPosition } from "@features/location/locationApi";
 import { getAvailableSurveys } from "@features/survey/surveyApi";
 import { getResults } from "@features/results/resultApi";
+import { getAccountInfo } from "@features/account/accountApi";
 import { APP_SURVEYS, APP_SETTINGS, APP_RESULTS } from "@navigation/routes";
 
 const Tab = createMaterialBottomTabNavigator();
@@ -41,6 +42,7 @@ const AppRouter = () => {
     useEffect(() => {
         dispatch(getCurrentPosition());
         dispatch(getResults());
+        dispatch(getAccountInfo());
     }, [appState]);
 
     useEffect(() => {

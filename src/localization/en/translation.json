@@ -56,11 +56,6 @@
             "button": "Open settings"
         },
         "settings": {
-            "exitModal": {
-                "title": "Are you sure you want to quit?",
-                "yes": "Yes",
-                "no": "No"
-            },
             "languageModal": {
                 "cancel": "Cancel",
                 "title": "Choose language",
@@ -89,7 +84,6 @@
                 "ok": "Ok",
                 "cancel": "Cancel"
             },
-            "exit": "Logout",
             "clear": "Clear all data"
         },
         "survey": {
@@ -114,6 +108,17 @@
             "submit": "Submit",
             "finish": "Finish",
             "success": "Survey successfully finished"
+        },
+        "account": {
+            "noName": "No name",
+            "interviewer": "Interviewer",
+            "admin": "Administrator",
+            "exitModal": {
+                "title": "Are you sure you want to quit?",
+                "yes": "Yes",
+                "no": "No"
+            },
+            "exit": "Logout"
         }
     },
     "components": {

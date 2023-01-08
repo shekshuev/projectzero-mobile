@@ -25,19 +25,7 @@ const RootRouter = () => {
     const [appState, setAppState] = useState(AppState.currentState);
     const [serviceEnabled, setServiceEnabled] = useState(false);
 
-    useEffect(() => {
-        if (accessToken) {
-            try {
-                if (isTokenStillFresh(accessToken)) {
-                    setSignedIn(true);
-                }
-            } catch (e) {
-                setSignedIn(false);
-            }
-        } else {
-            setSignedIn(false);
-        }
-    }, [accessToken]);
+    useEffect(() => setSignedIn(isTokenStillFresh(accessToken)), [accessToken]);
 
     useEffect(() => {
         if (isOffline) {

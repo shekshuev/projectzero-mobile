@@ -10,15 +10,9 @@ const AppBar = ({ navigation, back, options, backgroundColor }) => {
     const dispatch = useDispatch();
     const accessToken = useSelector(state => state.auth.accessToken);
 
-    const [isSignedIn, setSignedIn] = useState(false);
+    const [isSignedIn, setSignedIn] = useState(isTokenStillFresh(accessToken));
 
-    useEffect(() => {
-        if (accessToken) {
-            setSignedIn(isTokenStillFresh(accessToken));
-        } else {
-            setSignedIn(false);
-        }
-    }, [accessToken]);
+    useEffect(() => setSignedIn(isTokenStillFresh(accessToken)), [accessToken]);
 
     const goToLoginScreen = () => {
         dispatch(logout());
