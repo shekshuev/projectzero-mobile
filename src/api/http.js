@@ -1,12 +1,9 @@
 import axios from "axios";
 
-// const API_URL = process.env.REACT_APP_API_URL;
-const API_URL = "http://192.168.1.34:3000";
-
 class Http {
     constructor(builder) {
         this.http = axios.create({
-            baseURL: API_URL
+            baseURL: builder.apiUrl
         });
         for (let header in builder.headers) {
             this.http.defaults.headers[header] = builder.headers[header];
@@ -38,6 +35,12 @@ class Http {
 class HttpBuilder {
     constructor() {
         this.headers = [];
+        this.apiUrl = null;
+    }
+
+    setApiUrl(apiUrl) {
+        this.apiUrl = apiUrl;
+        return this;
     }
 
     setAuthorizationToken(token) {

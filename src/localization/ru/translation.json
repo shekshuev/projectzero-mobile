@@ -64,7 +64,9 @@
             },
             "common": {
                 "header": "Общее",
-                "language": "Язык"
+                "language": "Язык",
+                "apiAddress": "Адрес API",
+                "noApiAddress": "Не установлен"
             },
             "about": {
                 "header": "О приложении",
@@ -74,6 +76,12 @@
             "clearModal": {
                 "title": "Вы действительно хотите удалить все данные приложения?",
                 "yes": "Да",
+                "cancel": "Отмена"
+            },
+            "apiAddressModal": {
+                "title": "Изменить адрес API",
+                "label": "Адрес API",
+                "ok": "Ок",
                 "cancel": "Отмена"
             },
             "exit": "Выйти",

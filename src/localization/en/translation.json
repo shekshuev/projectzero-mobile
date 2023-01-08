@@ -64,7 +64,9 @@
             },
             "common": {
                 "header": "Common",
-                "language": "Language"
+                "language": "Language",
+                "apiAddress": "API address",
+                "noApiAddress": "Not set"
             },
             "about": {
                 "header": "About app",
@@ -74,6 +76,12 @@
             "clearModal": {
                 "title": "Do you really want to clear all application data?",
                 "yes": "Yes",
+                "cancel": "Cancel"
+            },
+            "apiAddressModal": {
+                "title": "Change API address",
+                "label": "API address",
+                "ok": "Ok",
                 "cancel": "Cancel"
             },
             "exit": "Logout",

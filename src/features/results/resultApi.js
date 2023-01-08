@@ -7,7 +7,11 @@ export const sendResult = createAsyncThunk("result/sendResult", async ({ result 
     if (state.auth.offline) {
         throw new OfflineError();
     }
-    const http = new HttpBuilder().useDefaultContentType().setAuthorizationToken(state.auth.accessToken).build();
+    const http = new HttpBuilder()
+        .setApiUrl(state.settings.apiAddress)
+        .useDefaultContentType()
+        .setAuthorizationToken(state.auth.accessToken)
+        .build();
     return http.post("/results", result);
 });
 
@@ -16,6 +20,10 @@ export const getResults = createAsyncThunk("result/getResults", async (arg, { ge
     if (state.auth.offline) {
         throw new OfflineError();
     }
-    const http = new HttpBuilder().useDefaultContentType().setAuthorizationToken(state.auth.accessToken).build();
+    const http = new HttpBuilder()
+        .setApiUrl(state.settings.apiAddress)
+        .useDefaultContentType()
+        .setAuthorizationToken(state.auth.accessToken)
+        .build();
     return http.get("/results/account", arg);
 });

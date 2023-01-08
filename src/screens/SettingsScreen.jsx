@@ -1,22 +1,28 @@
 import React, { useMemo, useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { useDispatch } from "react-redux";
-import { Button, Portal, Dialog, Text, RadioButton, List, useTheme } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Portal, Dialog, Text, RadioButton, List, useTheme, TextInput } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { logout } from "@features/auth/authSlice";
 import * as Application from "expo-application";
 import { clear as clearLocation } from "@features/location/locationSlice";
 import { clear as clearSurvey } from "@features/survey/surveySlice";
 import { clear as clearResult } from "@features/results/resultSlice";
+import { clear as clearSettings } from "@features/settings/settingsSlice";
+import { setApiAddress } from "@features/settings/settingsSlice";
 
 const SettingsScreen = () => {
     const { t, i18n } = useTranslation();
     const theme = useTheme();
 
+    const apiAddress = useSelector(state => state.settings.apiAddress);
+
     const [isExitModalVisible, setExitModalVisible] = useState(false);
     const [isLanguageModalVisible, setLanguageModalVisible] = useState(false);
     const [isClearModalVisible, setClearModalVisible] = useState(false);
+    const [isApiAddressModalVisible, setApiAddressModalVisible] = useState(false);
     const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+    const [tmpApiAddress, setTmpApiAddress] = useState();
     const dispatch = useDispatch();
 
     const openExitDialog = () => setExitModalVisible(true);
@@ -27,6 +33,12 @@ const SettingsScreen = () => {
 
     const openClearDialog = () => setClearModalVisible(true);
     const closeClearDialog = () => setClearModalVisible(false);
+
+    const openApiAddressDialog = () => {
+        setTmpApiAddress(apiAddress);
+        setApiAddressModalVisible(true);
+    };
+    const closeApiAddressDialog = () => setApiAddressModalVisible(false);
 
     const onLogoutButtonClicked = () => {
         dispatch(logout());
@@ -42,7 +54,13 @@ const SettingsScreen = () => {
         dispatch(clearLocation());
         dispatch(clearResult());
         dispatch(clearSurvey());
+        dispatch(clearSettings());
         dispatch(logout());
+    };
+
+    const onSetApiAddressButtonClicked = () => {
+        dispatch(setApiAddress(tmpApiAddress));
+        closeApiAddressDialog();
     };
 
     const languages = useMemo(
@@ -59,8 +77,13 @@ const SettingsScreen = () => {
                 <List.Subheader>{t("screens.settings.common.header")}</List.Subheader>
                 <List.Item
                     title={t("screens.settings.common.language")}
-                    description={() => <Text variant="bodyMedium">{languages[currentLanguage]}</Text>}
+                    description={languages[currentLanguage]}
                     onPress={openLanguageDialog}
+                />
+                <List.Item
+                    title={t("screens.settings.common.apiAddress")}
+                    description={apiAddress || t("screens.settings.common.noApiAddress")}
+                    onPress={openApiAddressDialog}
                 />
             </List.Section>
             <List.Section>
@@ -77,6 +100,26 @@ const SettingsScreen = () => {
                     {t("screens.settings.clear")}
                 </Button>
             </View>
+            <Portal>
+                <Dialog visible={isApiAddressModalVisible} onDismiss={closeApiAddressDialog}>
+                    <Dialog.Content>
+                        <Text variant="bodyLarge">{t("screens.settings.apiAddressModal.title")}</Text>
+                        <TextInput
+                            mode="flat"
+                            value={tmpApiAddress}
+                            label={t("screens.settings.apiAddressModal.label")}
+                            onChangeText={setTmpApiAddress}
+                            style={{ marginTop: 10 }}
+                        />
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={onSetApiAddressButtonClicked}>
+                            {t("screens.settings.apiAddressModal.ok")}
+                        </Button>
+                        <Button onPress={closeApiAddressDialog}>{t("screens.settings.apiAddressModal.cancel")}</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
             <Portal>
                 <Dialog visible={isClearModalVisible} onDismiss={closeClearDialog}>
                     <Dialog.Content>

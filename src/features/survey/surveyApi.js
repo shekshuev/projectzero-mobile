@@ -7,7 +7,11 @@ export const getAvailableSurveys = createAsyncThunk("survey/getAvailableSurveys"
     if (state.auth.offline) {
         throw new OfflineError();
     }
-    const http = new HttpBuilder().useDefaultContentType().setAuthorizationToken(state.auth.accessToken).build();
+    const http = new HttpBuilder()
+        .setApiUrl(state.settings.apiAddress)
+        .useDefaultContentType()
+        .setAuthorizationToken(state.auth.accessToken)
+        .build();
     return http.get("/surveys/available", {
         latitude: state.location.position?.latitude,
         longitude: state.location.position?.longitude
