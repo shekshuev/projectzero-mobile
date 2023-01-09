@@ -92,9 +92,7 @@ const LoginScreen = ({ navigation }) => {
                                 onPress={onLoginButtonClicked}>
                                 {t("screens.login.loginButton")}
                             </Button>
-                            <Button disabled={!(userName?.length > 0 && password?.length > 0)} onPress={useOffline}>
-                                {t("screens.login.useOffline")}
-                            </Button>
+                            <Button onPress={useOffline}>{t("screens.login.useOffline")}</Button>
                         </View>
                         <View style={styles.bottomRow}>
                             <Button onPress={goToSettings}>
