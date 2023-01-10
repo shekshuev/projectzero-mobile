@@ -204,7 +204,25 @@ const ActiveSurvey = ({ route, navigation }) => {
                 type: "Feature",
                 geometry: {
                     type: "Point",
-                    coordinates: [currentPosition.longitude, currentPosition.latitude]
+                    coordinates: [currentPosition.coords.longitude, currentPosition.coords.latitude]
+                }
+            },
+            questions: survey.form.questions?.map(q => ({
+                question: q,
+                selectedAnswer: null,
+                beginDates: [],
+                endDates: []
+            }))
+        });
+        console.log({
+            beginDate: new Date(),
+            endDate: null,
+            completed: false,
+            point: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [currentPosition.coords.longitude, currentPosition.coords.latitude]
                 }
             },
             questions: survey.form.questions?.map(q => ({
