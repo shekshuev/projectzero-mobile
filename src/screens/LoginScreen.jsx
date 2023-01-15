@@ -71,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
                             <TextInput
                                 mode="flat"
                                 value={password}
-                                secureTextEntry={isPasswordVisible}
+                                secureTextEntry={!isPasswordVisible}
                                 right={
                                     <TextInput.Icon
                                         icon={isPasswordVisible ? "eye" : "eye-off"}

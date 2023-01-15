@@ -14,15 +14,13 @@ const SurveyRouter = () => {
     const theme = useTheme();
 
     return (
-        <Stack.Navigator
-            screenOptions={{
-                header: props => <AppBar hasImportButton {...props} />
-            }}>
+        <Stack.Navigator>
             <Stack.Screen
                 options={{
                     title: t("navigation.surveyRouter.surveys.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.elevation.level2
+                    statusBarColor: theme.colors.elevation.level2,
+                    header: props => <AppBar hasImportButton {...props} />
                 }}
                 name={SURVEYS_LIST}
                 component={SurveyScreen}
@@ -31,7 +29,8 @@ const SurveyRouter = () => {
                 options={{
                     title: t("navigation.surveyRouter.surveyInfo.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.elevation.level2
+                    statusBarColor: theme.colors.elevation.level2,
+                    header: props => <AppBar {...props} />
                 }}
                 name={SURVEYS_INFO}
                 component={SurveyInfoScreen}
@@ -40,7 +39,8 @@ const SurveyRouter = () => {
                 options={{
                     title: t("navigation.surveyRouter.activeSurvey.title"),
                     statusBarStyle: theme.dark ? "light" : "dark",
-                    statusBarColor: theme.colors.elevation.level2
+                    statusBarColor: theme.colors.elevation.level2,
+                    header: props => <AppBar {...props} />
                 }}
                 name={SURVEYS_ACTIVE}
                 component={ActiveSurvey}

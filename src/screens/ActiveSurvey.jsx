@@ -2,7 +2,7 @@ import { Text, RadioButton, Button, Checkbox, TextInput, ProgressBar, Avatar } f
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useMemo, useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { addPendingResult } from "@features/results/resultSlice";
 
 const QuestionHeader = ({ question }) => {
@@ -214,24 +214,6 @@ const ActiveSurvey = ({ route, navigation }) => {
                 endDates: []
             }))
         });
-        console.log({
-            beginDate: new Date(),
-            endDate: null,
-            completed: false,
-            point: {
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: [currentPosition.coords.longitude, currentPosition.coords.latitude]
-                }
-            },
-            questions: survey.form.questions?.map(q => ({
-                question: q,
-                selectedAnswer: null,
-                beginDates: [],
-                endDates: []
-            }))
-        });
         setActiveIndex(0);
     }, []);
 
@@ -273,39 +255,45 @@ const ActiveSurvey = ({ route, navigation }) => {
                     </Text>
                 </View>
             ) : (
-                <View style={styles.container}>
-                    <View>
-                        <View style={styles.progressControls}>
-                            <Button icon="chevron-left" onPress={onPrevQuestionButtonClicked} />
-                            <Text variant="titleLarge">{`${activeIndex + 1} / ${questions?.length}`}</Text>
-                            <Button disabled={!canGoNext} icon="chevron-right" onPress={onNextQuestionButtonClicked} />
+                <ScrollView style={styles.scrollView}>
+                    <View style={styles.container}>
+                        <View style={styles.top}>
+                            <View style={styles.progressControls}>
+                                <Button icon="chevron-left" onPress={onPrevQuestionButtonClicked} />
+                                <Text variant="titleLarge">{`${activeIndex + 1} / ${questions?.length}`}</Text>
+                                <Button
+                                    disabled={!canGoNext}
+                                    icon="chevron-right"
+                                    onPress={onNextQuestionButtonClicked}
+                                />
+                            </View>
+                            <ProgressBar progress={(activeIndex + 1) / questions?.length || 0} />
                         </View>
-                        <ProgressBar progress={(activeIndex + 1) / questions?.length || 0} />
+                        {activeQuestion?.question?.type === "single" ? (
+                            <Single question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+                        ) : activeQuestion?.question?.type === "multiple" ? (
+                            <Multiple question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+                        ) : activeQuestion?.question?.type === "open" ? (
+                            <Open question={activeQuestion} onAnswerSelected={onAnswerSelected} />
+                        ) : (
+                            ""
+                        )}
+                        {questions?.length > 0 && (
+                            <View style={styles.buttons}>
+                                {!canHideSubmitButton && (
+                                    <Button disabled={!canGoNext} mode="contained-tonal" onPress={onSubmitButtonClick}>
+                                        {t("screens.activeSurvey.submit")}
+                                    </Button>
+                                )}
+                                {canFinish && (
+                                    <Button style={styles.finishButton} mode="contained" onPress={onFinishButtonClick}>
+                                        {t("screens.activeSurvey.finish")}
+                                    </Button>
+                                )}
+                            </View>
+                        )}
                     </View>
-                    {activeQuestion?.question?.type === "single" ? (
-                        <Single question={activeQuestion} onAnswerSelected={onAnswerSelected} />
-                    ) : activeQuestion?.question?.type === "multiple" ? (
-                        <Multiple question={activeQuestion} onAnswerSelected={onAnswerSelected} />
-                    ) : activeQuestion?.question?.type === "open" ? (
-                        <Open question={activeQuestion} onAnswerSelected={onAnswerSelected} />
-                    ) : (
-                        ""
-                    )}
-                    {questions?.length > 0 && (
-                        <View>
-                            {!canHideSubmitButton && (
-                                <Button disabled={!canGoNext} mode="contained-tonal" onPress={onSubmitButtonClick}>
-                                    {t("screens.activeSurvey.submit")}
-                                </Button>
-                            )}
-                            {canFinish && (
-                                <Button style={styles.finishButton} mode="contained" onPress={onFinishButtonClick}>
-                                    {t("screens.activeSurvey.finish")}
-                                </Button>
-                            )}
-                        </View>
-                    )}
-                </View>
+                </ScrollView>
             )}
         </>
     );
@@ -314,8 +302,11 @@ const ActiveSurvey = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
         padding: 10
+    },
+    scrollView: {
+        flexGrow: 1
     },
     title: {
         marginBottom: 10
@@ -338,6 +329,10 @@ const styles = StyleSheet.create({
     message: {
         textAlign: "center",
         marginTop: 10
+    },
+    buttons: { marginTop: 40 },
+    top: {
+        marginBottom: 40
     }
 });
 
