@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { ScrollView, StyleSheet } from "react-native";
 import { SURVEYS_ACTIVE } from "@navigation/routes";
+import { reload } from "@screens/ActiveSurvey";
 
 const SurveyInfoScreen = ({ route, navigation }) => {
     const { t } = useTranslation();
@@ -44,7 +45,10 @@ const SurveyInfoScreen = ({ route, navigation }) => {
                 />
                 <List.Item title={t("screens.surveyInfo.questionsCount")} description={survey.form.questions.length} />
             </List.Section>
-            <Button style={styles.button} icon="play" mode="contained" onPress={onStartSurveyButtonClicked}>
+            <Button style={styles.button} icon="play" mode="contained" onPress={() => {
+                reload();
+                onStartSurveyButtonClicked();
+                }}>
                 {t("screens.surveyInfo.startSurvey")}
             </Button>
         </ScrollView>

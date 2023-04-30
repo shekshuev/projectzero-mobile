@@ -58,6 +58,15 @@ const Multiple = ({ question, onAnswerSelected }) => {
                     onPress={() => onValueChanged(answer.code)}
                     status={values?.includes(answer.code) ? "checked" : "unchecked"}
                     key={i}
+                    disabled={
+                        question?.question?.maxCount == undefined
+                            ? false
+                            : question?.question?.maxCount < values?.length + 1
+                            ? !values?.includes(answer.code)
+                                ? true
+                                : false
+                            : false
+                    }
                 />
             ))}
         </View>
@@ -85,7 +94,10 @@ const Open = ({ question, onAnswerSelected }) => {
         </View>
     );
 };
-
+let activeAnswersArray = [];
+let isRequired = 0;
+let answersMemory = 0;
+let marker = 0;
 const ActiveSurvey = ({ route, navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -101,25 +113,30 @@ const ActiveSurvey = ({ route, navigation }) => {
     const questions = useMemo(() => filled.questions, [filled]);
     const activeQuestion = useMemo(() => questions?.[activeIndex], [activeIndex]);
     const canGoNext = useMemo(() => {
+        if (activeQuestion?.question?.type === "multiple")
+                if (questions?.[activeIndex]?.question?.minCount != undefined)
+                    if (questions?.[activeIndex]?.question?.minCount <= questions?.[activeIndex]?.selectedAnswer?.length)
+                        return true;
+                        if (questions?.[activeIndex]?.question?.minCount == undefined || activeQuestion?.question?.type != "multiple")
         if (!questions?.[activeIndex]?.question?.required) {
             return true;
-        } else if (!!questions?.[activeIndex]?.selectedAnswer) {
-            if (
-                Object.prototype.toString.apply(questions?.[activeIndex]?.selectedAnswer) === "[object Array]" &&
-                questions?.[activeIndex]?.selectedAnswer?.length === 0
-            ) {
-                return false;
+            } else if (!!questions?.[activeIndex]?.selectedAnswer) {
+                if (
+                    Object.prototype.toString.apply(questions?.[activeIndex]?.selectedAnswer) === "[object Array]" &&
+                    questions?.[activeIndex]?.selectedAnswer?.length === 0
+                ) {
+                    return false;
+                }
+                return true;
             }
-            return true;
-        }
         return false;
     }, [filled]);
 
     const canFinish = useMemo(() => {
         const numberOfRequiredQuestionsLeft = questions?.filter(
             question =>
-                question.question.required && (!question.selectedAnswer || question.selectedAnswer?.length === 0)
-        )?.length;
+                question.question.required
+        )?.length - isRequired - answersMemory;
         return numberOfRequiredQuestionsLeft === 0;
     }, [filled]);
 
@@ -171,15 +188,80 @@ const ActiveSurvey = ({ route, navigation }) => {
 
     const onNextQuestionButtonClicked = () => {
         setEndTime();
-        setActiveIndex(activeIndex === questions?.length - 1 ? activeIndex : activeIndex + 1);
+        if (activeQuestion?.question?.type !== "open") {
+            if (typeof questions?.[activeIndex]?.selectedAnswer == "string") {
+                activeAnswersArray.push(questions?.[activeIndex]?.selectedAnswer);
+            } else if (typeof questions?.[activeIndex]?.selectedAnswer == "object") {
+                questions?.[activeIndex]?.selectedAnswer?.map(function (answer) {
+                    activeAnswersArray.push(answer);
+                    activeAnswersArray = [...new Set(activeAnswersArray)];
+                });
+            }
+        }
+        if (questions?.[activeIndex]?.question?.required && activeIndex + 1 !== questions?.length) {
+            answersMemory++;
+        }
+        let nextValue = 1;
+        let remainQuestions = questions.length - activeIndex - 1;
+        for (remainQuestions; remainQuestions > 0; ) {
+            remainQuestions--;
+            activeAnswersArray.forEach(value => {
+                if (questions?.[activeIndex + nextValue]?.question?.isIgnore?.includes(value)) {
+                    if (activeIndex + nextValue + 1 != questions.length) {
+                        if (questions?.[activeIndex + nextValue]?.question?.required) {
+                            isRequired++;
+                        }
+                        let selectedAnswersArray = [];
+                        for (let i = 0; i < questions?.[activeIndex + nextValue]?.question?.answers.length; i++) {
+                            selectedAnswersArray.push(questions?.[activeIndex + nextValue]?.question?.answers[i].code);
+                        }
+                        activeAnswersArray = activeAnswersArray.filter(item => !selectedAnswersArray.includes(item));
+                        nextValue++;
+                    }
+                }
+            });
+        }
+
+        setActiveIndex(activeIndex === questions?.length - nextValue ? activeIndex : activeIndex + nextValue);
     };
 
     const onPrevQuestionButtonClicked = () => {
         setEndTime();
-        setActiveIndex(activeIndex === 0 ? 0 : activeIndex - 1);
+        let nextValue = 1;
+        let numberAnsweredQuestions = activeIndex + 1;
+        for (numberAnsweredQuestions; numberAnsweredQuestions > 0; ) {
+            numberAnsweredQuestions--;
+            activeAnswersArray.forEach(value => {
+                if (questions?.[activeIndex - nextValue]?.question?.isIgnore?.includes(value)) {
+                    if (questions?.[activeIndex - nextValue]?.question?.required) {
+                        isRequired--;
+                    }
+                    nextValue++;
+                }
+            });
+        }
+        if (questions?.[activeIndex - nextValue]?.question?.required) {
+            let selectedAnswersArray = [];
+            for (let i = 0; i < questions?.[activeIndex - nextValue]?.question?.answers.length; i++) {
+                selectedAnswersArray.push(questions?.[activeIndex - nextValue]?.question?.answers[i].code);
+            }
+            if (activeAnswersArray.some(item => selectedAnswersArray.includes(item)))
+                answersMemory--;
+        }
+
+        setActiveIndex(activeIndex === 0 ? 0 : activeIndex - nextValue);
     };
 
     const onAnswerSelected = answer => {
+        if (activeIndex + 1 == questions?.length && marker === 0 && questions?.[activeIndex]?.question?.required) {
+            answersMemory++;
+            marker++;
+        }
+        let selectedAnswersArray = [];
+        for (let i = 0; i < questions?.[activeIndex]?.question?.answers.length; i++) {
+            selectedAnswersArray.push(questions?.[activeIndex]?.question?.answers[i].code);
+        }
+        activeAnswersArray = activeAnswersArray.filter(item => !selectedAnswersArray.includes(item));
         setFilled({
             ...filled,
             questions: questions?.map((q, i) => {
@@ -337,3 +419,10 @@ const styles = StyleSheet.create({
 });
 
 export default ActiveSurvey;
+
+export function reload() {
+    activeAnswersArray = [];
+    isRequired = 0;
+    answersMemory = 0;
+    marker = 0;
+}
