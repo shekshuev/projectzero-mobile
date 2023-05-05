@@ -14,6 +14,7 @@ const SurveyInfoScreen = ({ route, navigation }) => {
     const survey = useMemo(() => surveys?.find(s => s.id === id), [id]);
 
     const onStartSurveyButtonClicked = () => {
+        reload();
         navigation.navigate(SURVEYS_ACTIVE, { id });
     };
 
@@ -45,10 +46,7 @@ const SurveyInfoScreen = ({ route, navigation }) => {
                 />
                 <List.Item title={t("screens.surveyInfo.questionsCount")} description={survey.form.questions.length} />
             </List.Section>
-            <Button style={styles.button} icon="play" mode="contained" onPress={() => {
-                reload();
-                onStartSurveyButtonClicked();
-                }}>
+            <Button style={styles.button} icon="play" mode="contained" onPress={onStartSurveyButtonClicked}>
                 {t("screens.surveyInfo.startSurvey")}
             </Button>
         </ScrollView>
