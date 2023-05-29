@@ -38,6 +38,10 @@ const Single = ({ question, onAnswerSelected }) => {
 const Multiple = ({ question, onAnswerSelected }) => {
     const [values, setValues] = useState(question.selectedAnswer || []);
 
+    useEffect(() => {
+        setValues(question.selectedAnswer || []);
+    }, [question]);
+
     const onValueChanged = value => {
         let tmp = [];
         if (values.includes(value)) {
@@ -59,7 +63,7 @@ const Multiple = ({ question, onAnswerSelected }) => {
                     status={values?.includes(answer.code) ? "checked" : "unchecked"}
                     key={i}
                     disabled={
-                        typeof question?.question?.maxCount !== "undefined" && question?.question?.maxCount < values?.length + 1 && !values?.includes(answer.code)
+                        question?.question?.maxCount < values?.length + 1 && !values?.includes(answer.code)
                             ? true
                             : false
                     }
@@ -90,9 +94,7 @@ const Open = ({ question, onAnswerSelected }) => {
         </View>
     );
 };
-let isRequired = 0;
-let answersMemory = 0;
-let marker = 0;
+
 const ActiveSurvey = ({ route, navigation }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -103,6 +105,10 @@ const ActiveSurvey = ({ route, navigation }) => {
 
     const activeAnswersArrayRef = useRef([]);
 
+    const isRequired = useRef(0);
+    const answersMemory = useRef(0);
+    const marker = useRef(0);
+
     const [filled, setFilled] = useState({});
 
     const [activeIndex, setActiveIndex] = useState();
@@ -110,13 +116,23 @@ const ActiveSurvey = ({ route, navigation }) => {
     const questions = useMemo(() => filled.questions, [filled]);
     const activeQuestion = useMemo(() => questions?.[activeIndex], [activeIndex]);
     const canGoNext = useMemo(() => {
-        if (activeQuestion?.question?.type === "multiple")
-        if (typeof questions?.[activeIndex]?.question?.minCount !== "undefined")
-                    if (questions?.[activeIndex]?.question?.minCount <= questions?.[activeIndex]?.selectedAnswer?.length)
-                        return true;
-                        if (typeof questions?.[activeIndex]?.question?.minCount === "undefined" || activeQuestion?.question?.type !== "multiple")
-        if (!questions?.[activeIndex]?.question?.required) {
-            return true;
+        if (activeQuestion?.question?.type === "multiple") {
+            if (
+                !questions?.[activeIndex]?.question?.minCount &&
+                questions?.[activeIndex]?.selectedAnswer?.length > 0 &&
+                questions?.[activeIndex]?.question?.required
+            ) {
+                return true;
+            } else if (
+                questions?.[activeIndex]?.question?.minCount <= questions?.[activeIndex]?.selectedAnswer?.length
+            ) {
+                return true;
+            } else if (!questions?.[activeIndex]?.question?.minCount && !questions?.[activeIndex]?.question?.required) {
+                return true;
+            }
+        } else {
+            if (!questions?.[activeIndex]?.question?.required) {
+                return true;
             } else if (!!questions?.[activeIndex]?.selectedAnswer) {
                 if (
                     Object.prototype.toString.apply(questions?.[activeIndex]?.selectedAnswer) === "[object Array]" &&
@@ -126,14 +142,15 @@ const ActiveSurvey = ({ route, navigation }) => {
                 }
                 return true;
             }
+        }
         return false;
     }, [filled]);
 
     const canFinish = useMemo(() => {
-        const numberOfRequiredQuestionsLeft = questions?.filter(
-            question =>
-                question.question.required
-        )?.length - isRequired - answersMemory;
+        const numberOfRequiredQuestionsLeft =
+            questions?.filter(question => question.question.required)?.length -
+            isRequired.current -
+            answersMemory.current;
         return numberOfRequiredQuestionsLeft === 0;
     }, [filled]);
 
@@ -187,7 +204,7 @@ const ActiveSurvey = ({ route, navigation }) => {
         setEndTime();
         if (typeof questions?.[activeIndex]?.selectedAnswer === "string") {
             activeAnswersArrayRef.current.push(questions?.[activeIndex]?.selectedAnswer);
-        } else if (typeof questions?.[activeIndex]?.selectedAnswer === "object") {
+        } else {
             questions?.[activeIndex]?.selectedAnswer?.map(function (answer) {
                 activeAnswersArrayRef.current.push(answer);
                 activeAnswersArrayRef.current = [...new Set(activeAnswersArrayRef.current)];
@@ -197,7 +214,7 @@ const ActiveSurvey = ({ route, navigation }) => {
             activeAnswersArrayRef.current = [...new Set(activeAnswersArrayRef.current)];
         }
         if (questions?.[activeIndex]?.question?.required && activeIndex + 1 !== questions?.length) {
-            answersMemory++;
+            answersMemory.current++;
         }
         let nextValue = 1;
         let remainQuestions = questions.length - activeIndex - 1;
@@ -207,13 +224,15 @@ const ActiveSurvey = ({ route, navigation }) => {
                 if (questions?.[activeIndex + nextValue]?.question?.isIgnore?.includes(value)) {
                     if (activeIndex + nextValue + 1 !== questions.length) {
                         if (questions?.[activeIndex + nextValue]?.question?.required) {
-                            isRequired++;
+                            isRequired.current++;
                         }
                         let selectedAnswersArray = [];
                         for (let i = 0; i < questions?.[activeIndex + nextValue]?.question?.answers.length; i++) {
                             selectedAnswersArray.push(questions?.[activeIndex + nextValue]?.question?.answers[i].code);
                         }
-                        activeAnswersArrayRef.current = activeAnswersArrayRef.current.filter(item => !selectedAnswersArray.includes(item));
+                        activeAnswersArrayRef.current = activeAnswersArrayRef.current.filter(
+                            item => !selectedAnswersArray.includes(item)
+                        );
                         nextValue++;
                     }
                 }
@@ -232,7 +251,7 @@ const ActiveSurvey = ({ route, navigation }) => {
             activeAnswersArrayRef.current.forEach(value => {
                 if (questions?.[activeIndex - nextValue]?.question?.isIgnore?.includes(value)) {
                     if (questions?.[activeIndex - nextValue]?.question?.required) {
-                        isRequired--;
+                        isRequired.current--;
                     }
                     nextValue++;
                 }
@@ -243,19 +262,25 @@ const ActiveSurvey = ({ route, navigation }) => {
             for (let i = 0; i < questions?.[activeIndex - nextValue]?.question?.answers.length; i++) {
                 selectedAnswersArray.push(questions?.[activeIndex - nextValue]?.question?.answers[i].code);
             }
-            if (activeAnswersArrayRef.current.some(item => selectedAnswersArray.includes(item)))
-                answersMemory--;
-            if (questions?.[activeIndex - nextValue]?.question?.type === "open")
-                answersMemory--;
+            if (activeAnswersArrayRef.current.some(item => selectedAnswersArray.includes(item))) {
+                answersMemory.current--;
+            }
+            if (questions?.[activeIndex - nextValue]?.question?.type === "open") {
+                answersMemory.current--;
+            }
         }
 
         setActiveIndex(activeIndex === 0 ? 0 : activeIndex - nextValue);
     };
 
     const onAnswerSelected = answer => {
-        if (activeIndex + 1 === questions?.length && marker === 0 && questions?.[activeIndex]?.question?.required) {
-            answersMemory++;
-            marker++;
+        if (
+            activeIndex + 1 === questions?.length &&
+            marker.current === 0 &&
+            questions?.[activeIndex]?.question?.required
+        ) {
+            answersMemory.current++;
+            marker.current++;
         }
         let selectedAnswersArray = [];
         for (let i = 0; i < questions?.[activeIndex]?.question?.answers.length; i++) {
@@ -267,7 +292,9 @@ const ActiveSurvey = ({ route, navigation }) => {
                 activeAnswersArrayRef.current.splice(index, 1);
             }
         }
-        activeAnswersArrayRef.current = activeAnswersArrayRef.current.filter(item => !selectedAnswersArray.includes(item));
+        activeAnswersArrayRef.current = activeAnswersArrayRef.current.filter(
+            item => !selectedAnswersArray.includes(item)
+        );
         setFilled({
             ...filled,
             questions: questions?.map((q, i) => {
@@ -425,9 +452,3 @@ const styles = StyleSheet.create({
 });
 
 export default ActiveSurvey;
-
-export function reload() {
-    isRequired = 0;
-    answersMemory = 0;
-    marker = 0;
-}

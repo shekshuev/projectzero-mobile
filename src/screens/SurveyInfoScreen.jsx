@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import moment from "moment";
 import { ScrollView, StyleSheet } from "react-native";
 import { SURVEYS_ACTIVE } from "@navigation/routes";
-import { reload } from "@screens/ActiveSurvey";
 
 const SurveyInfoScreen = ({ route, navigation }) => {
     const { t } = useTranslation();
@@ -14,7 +13,6 @@ const SurveyInfoScreen = ({ route, navigation }) => {
     const survey = useMemo(() => surveys?.find(s => s.id === id), [id]);
 
     const onStartSurveyButtonClicked = () => {
-        reload();
         navigation.navigate(SURVEYS_ACTIVE, { id });
     };
 
