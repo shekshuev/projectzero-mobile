@@ -7,13 +7,17 @@ export const getAvailableSurveys = createAsyncThunk("survey/getAvailableSurveys"
     if (state.auth.offline) {
         throw new OfflineError();
     }
+    console.log({
+        latitude: state.location.position?.coords?.latitude,
+        longitude: state.location.position?.coords?.longitude
+    });
     const http = new HttpBuilder()
         .setApiUrl(state.settings.apiAddress)
         .useDefaultContentType()
         .setAuthorizationToken(state.auth.accessToken)
         .build();
     return http.get("/surveys/available", {
-        latitude: state.location.position?.latitude,
-        longitude: state.location.position?.longitude
+        latitude: state.location.position?.coords?.latitude,
+        longitude: state.location.position?.coords?.longitude
     });
 });

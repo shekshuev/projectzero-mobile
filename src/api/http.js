@@ -16,7 +16,7 @@ class Http {
     }
 
     async get(where, data) {
-        return await this.http.get(where, data);
+        return await this.http.get(where, { params: data });
     }
 
     async put(where, data) {
