@@ -1,7 +1,7 @@
 import { Text, RadioButton, Button, Checkbox, TextInput, ProgressBar, Avatar } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useRef } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { addPendingResult } from "@features/results/resultSlice";
 
@@ -38,6 +38,10 @@ const Single = ({ question, onAnswerSelected }) => {
 const Multiple = ({ question, onAnswerSelected }) => {
     const [values, setValues] = useState(question.selectedAnswer || []);
 
+    useEffect(() => {
+        setValues(question.selectedAnswer || []);
+    }, [question]);
+
     const onValueChanged = value => {
         let tmp = [];
         if (values.includes(value)) {
@@ -58,6 +62,11 @@ const Multiple = ({ question, onAnswerSelected }) => {
                     onPress={() => onValueChanged(answer.code)}
                     status={values?.includes(answer.code) ? "checked" : "unchecked"}
                     key={i}
+                    disabled={
+                        question?.question?.maxCount < values?.length + 1 && !values?.includes(answer.code)
+                            ? true
+                            : false
+                    }
                 />
             ))}
         </View>
@@ -94,6 +103,12 @@ const ActiveSurvey = ({ route, navigation }) => {
     const surveys = useSelector(state => state.survey.surveys);
     const survey = useMemo(() => surveys?.find(s => s.id === id), [surveys]);
 
+    const activeAnswersArrayRef = useRef([]);
+
+    const isRequired = useRef(0);
+    const answersMemory = useRef(0);
+    const marker = useRef(0);
+
     const [filled, setFilled] = useState({});
 
     const [activeIndex, setActiveIndex] = useState();
@@ -101,25 +116,41 @@ const ActiveSurvey = ({ route, navigation }) => {
     const questions = useMemo(() => filled.questions, [filled]);
     const activeQuestion = useMemo(() => questions?.[activeIndex], [activeIndex]);
     const canGoNext = useMemo(() => {
-        if (!questions?.[activeIndex]?.question?.required) {
-            return true;
-        } else if (!!questions?.[activeIndex]?.selectedAnswer) {
+        if (activeQuestion?.question?.type === "multiple") {
             if (
-                Object.prototype.toString.apply(questions?.[activeIndex]?.selectedAnswer) === "[object Array]" &&
-                questions?.[activeIndex]?.selectedAnswer?.length === 0
+                !questions?.[activeIndex]?.question?.minCount &&
+                questions?.[activeIndex]?.selectedAnswer?.length > 0 &&
+                questions?.[activeIndex]?.question?.required
             ) {
-                return false;
+                return true;
+            } else if (
+                questions?.[activeIndex]?.question?.minCount <= questions?.[activeIndex]?.selectedAnswer?.length
+            ) {
+                return true;
+            } else if (!questions?.[activeIndex]?.question?.minCount && !questions?.[activeIndex]?.question?.required) {
+                return true;
             }
-            return true;
+        } else {
+            if (!questions?.[activeIndex]?.question?.required) {
+                return true;
+            } else if (!!questions?.[activeIndex]?.selectedAnswer) {
+                if (
+                    Object.prototype.toString.apply(questions?.[activeIndex]?.selectedAnswer) === "[object Array]" &&
+                    questions?.[activeIndex]?.selectedAnswer?.length === 0
+                ) {
+                    return false;
+                }
+                return true;
+            }
         }
         return false;
     }, [filled]);
 
     const canFinish = useMemo(() => {
-        const numberOfRequiredQuestionsLeft = questions?.filter(
-            question =>
-                question.question.required && (!question.selectedAnswer || question.selectedAnswer?.length === 0)
-        )?.length;
+        const numberOfRequiredQuestionsLeft =
+            questions?.filter(question => question.question.required)?.length -
+            isRequired.current -
+            answersMemory.current;
         return numberOfRequiredQuestionsLeft === 0;
     }, [filled]);
 
@@ -171,15 +202,99 @@ const ActiveSurvey = ({ route, navigation }) => {
 
     const onNextQuestionButtonClicked = () => {
         setEndTime();
-        setActiveIndex(activeIndex === questions?.length - 1 ? activeIndex : activeIndex + 1);
+        if (typeof questions?.[activeIndex]?.selectedAnswer === "string") {
+            activeAnswersArrayRef.current.push(questions?.[activeIndex]?.selectedAnswer);
+        } else {
+            questions?.[activeIndex]?.selectedAnswer?.map(function (answer) {
+                activeAnswersArrayRef.current.push(answer);
+                activeAnswersArrayRef.current = [...new Set(activeAnswersArrayRef.current)];
+            });
+        }
+        if (activeQuestion?.question?.type === "open") {
+            activeAnswersArrayRef.current = [...new Set(activeAnswersArrayRef.current)];
+        }
+        if (questions?.[activeIndex]?.question?.required && activeIndex + 1 !== questions?.length) {
+            answersMemory.current++;
+        }
+        let nextValue = 1;
+        let remainQuestions = questions.length - activeIndex - 1;
+        for (remainQuestions; remainQuestions > 0; ) {
+            remainQuestions--;
+            activeAnswersArrayRef.current.forEach(value => {
+                if (questions?.[activeIndex + nextValue]?.question?.isIgnore?.includes(value)) {
+                    if (activeIndex + nextValue + 1 !== questions.length) {
+                        if (questions?.[activeIndex + nextValue]?.question?.required) {
+                            isRequired.current++;
+                        }
+                        let selectedAnswersArray = [];
+                        for (let i = 0; i < questions?.[activeIndex + nextValue]?.question?.answers.length; i++) {
+                            selectedAnswersArray.push(questions?.[activeIndex + nextValue]?.question?.answers[i].code);
+                        }
+                        activeAnswersArrayRef.current = activeAnswersArrayRef.current.filter(
+                            item => !selectedAnswersArray.includes(item)
+                        );
+                        nextValue++;
+                    }
+                }
+            });
+        }
+
+        setActiveIndex(activeIndex === questions?.length - nextValue ? activeIndex : activeIndex + nextValue);
     };
 
     const onPrevQuestionButtonClicked = () => {
         setEndTime();
-        setActiveIndex(activeIndex === 0 ? 0 : activeIndex - 1);
+        let nextValue = 1;
+        let numberAnsweredQuestions = activeIndex + 1;
+        for (numberAnsweredQuestions; numberAnsweredQuestions > 0; ) {
+            numberAnsweredQuestions--;
+            activeAnswersArrayRef.current.forEach(value => {
+                if (questions?.[activeIndex - nextValue]?.question?.isIgnore?.includes(value)) {
+                    if (questions?.[activeIndex - nextValue]?.question?.required) {
+                        isRequired.current--;
+                    }
+                    nextValue++;
+                }
+            });
+        }
+        if (questions?.[activeIndex - nextValue]?.question?.required) {
+            let selectedAnswersArray = [];
+            for (let i = 0; i < questions?.[activeIndex - nextValue]?.question?.answers.length; i++) {
+                selectedAnswersArray.push(questions?.[activeIndex - nextValue]?.question?.answers[i].code);
+            }
+            if (activeAnswersArrayRef.current.some(item => selectedAnswersArray.includes(item))) {
+                answersMemory.current--;
+            }
+            if (questions?.[activeIndex - nextValue]?.question?.type === "open") {
+                answersMemory.current--;
+            }
+        }
+
+        setActiveIndex(activeIndex === 0 ? 0 : activeIndex - nextValue);
     };
 
     const onAnswerSelected = answer => {
+        if (
+            activeIndex + 1 === questions?.length &&
+            marker.current === 0 &&
+            questions?.[activeIndex]?.question?.required
+        ) {
+            answersMemory.current++;
+            marker.current++;
+        }
+        let selectedAnswersArray = [];
+        for (let i = 0; i < questions?.[activeIndex]?.question?.answers.length; i++) {
+            selectedAnswersArray.push(questions?.[activeIndex]?.question?.answers[i].code);
+        }
+        if (questions?.[activeIndex]?.question?.type === "open") {
+            let index = activeAnswersArrayRef.current.indexOf(questions?.[activeIndex]?.selectedAnswer);
+            if (index !== -1) {
+                activeAnswersArrayRef.current.splice(index, 1);
+            }
+        }
+        activeAnswersArrayRef.current = activeAnswersArrayRef.current.filter(
+            item => !selectedAnswersArray.includes(item)
+        );
         setFilled({
             ...filled,
             questions: questions?.map((q, i) => {

@@ -21,6 +21,10 @@ const LoginScreen = ({ navigation }) => {
     const [isPasswordVisible, setPasswordVisible] = useState(false);
     const [isSnackbarVisible, setSnackbarVisible] = useState(false);
 
+    const onLoginClickedTrim = () => {
+        setUserName(userName.trim());
+        setPassword(password.trim());
+    }
     const onLoginButtonClicked = () => {
         dispatch(signIn({ userName, password }));
     };
@@ -89,6 +93,7 @@ const LoginScreen = ({ navigation }) => {
                                 mode="contained"
                                 style={styles.loginButton}
                                 disabled={!(userName?.length > 0 && password?.length > 0)}
+                                onPressIn={onLoginClickedTrim}
                                 onPress={onLoginButtonClicked}>
                                 {t("screens.login.loginButton")}
                             </Button>
